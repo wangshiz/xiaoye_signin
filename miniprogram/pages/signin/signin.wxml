@@ -1,0 +1,2 @@
+<!--ono/signin/signin.wxml-->
+<text>{{id}}</text>
