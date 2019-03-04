@@ -9,11 +9,11 @@
     <view wx:for="{{signInData}}" wx:item="{{item}}" wx:key="trem" class="sign-item" bindtap='goToSignPage' data-id='{{item.id}}'>
       <input value='{{item.id}}' style='display: none;'/>
       <view class="sign-name">{{item.name}}</view>
-      <view class="sign-date">{{item.date}}</view>
-      <view class="sign-day-count">已坚持<text class="day-item">{{item.dayCount}}</text>天</view>
-      <view class="sign-cont-count">持续签到<text class="day-item">{{item.contCount}}</text>天</view>
+      <view class="sign-date">{{item.begin_date}}</view>
+      <view class="sign-day-count">已坚持<text class="day-item">{{item.day_count}}</text>天</view>
+      <view class="sign-cont-count">持续签到<text class="day-item">{{item.cont_count}}</text>天</view>
       <!-- <view class='sign-minus'><image src="{{minusIcon}}"></image></view> -->
-      <view class='sign-minus' catchtap='signDelete' data-id='{{item.id}}'>点击放弃</view>
+      <view class='sign-minus' catchtap='signDelete' data-id='{{item._id}}'>点击放弃</view>
     </view>
     <view wx:if='{{signInData.length == dateCount}}' class='sign-remind'>(至多添加{{dateCount}}条)</view>
   </view>

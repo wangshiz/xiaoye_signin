@@ -1,5 +1,7 @@
 const app = getApp()
 const util = require("../../utils/util.js")
+const db = wx.cloud.database()
+
 Page({
 
   /**
@@ -12,16 +14,11 @@ Page({
     takeSession: false,
     month: null,
     day: null,
-    signInData: [
-      { id: 1, name: '健身', date: '2017/01/02', dayCount: '20', contCount: '7' },
-      { id: 2, name: '早起', date: '2017/01/02', dayCount: '31', contCount: '9' },
-      { id: 3, name: '早睡', date: '2017/01/02', dayCount: '14', contCount: '3' },
-      { id: 4, name: '看微信小程序', date: '2017/01/02', dayCount: '17', contCount: '7' },
-      { id: 5, name: '吃早饭', date: '2017/01/02', dayCount: '17', contCount: '7' },
-    ],
+    signInData: [],
     dateCount: 10,
     showFormStatus: false,
     signAddDisplay: false,
+    open_id: null
   },
   //打开form表单
   openForm(e){
@@ -58,33 +55,63 @@ Page({
   //删除习惯
   signDelete(e){
     var id = e.currentTarget.dataset.id
-      , arrNo
       , that = this;
     wx.showModal({
       title: '',
       content: '确定要放弃吗',
       success(res) {
         if (res.confirm) {
-          console.log('用户点击确定')
-          console.log(id)
-          var array = that.data.signInData;
-          for (var i = 0; i < array.length; ++i) {
-            var signId = array[i].id;
-            if (id == signId) {
-              arrNo = i
-              continue;
+          db.collection('busi_sign_in').doc(id).remove({
+            success(res) {
+              that.getsignindata();
+              setTimeout(function () {
+                if (that.data.signHeight > that.data.windowHeight) {
+                  that.buildAddAnimation("up")
+                }
+                wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
+                  that.setData({
+                    signHeight: rect.height
+                  })
+                }).exec();
+              }, 500)
             }
-          }
-          if (arrNo != null){
-            array.splice(arrNo, 1);
-          }
-
-          that.setData({
-            signInData: array,
           })
-          setTimeout(function(){
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
+  //添加习惯
+  addSign(e){
+    var name = e.detail.value.rName
+      , openid = this.data.openid
+      , that = this;
+    if (name == null || name == ""){
+      this.buildFormAnimation(e.currentTarget.dataset.status)
+      return;
+    }
+
+    db.collection('busi_sign_in').add({
+      // data 字段表示需新增的 JSON 数据
+      data: {
+        openid: openid,
+        name: name,
+        begin_date: db.serverDate(),
+        cont_count: 0,
+        day_count: 0,
+        last_sign_date: null        
+      },
+      success(res) {
+        console.log("res=>"+res._id)
+        // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
+        if (res._id != null && res._id != "") {
+          that.getsignindata();
+          that.buildFormAnimation(e.currentTarget.dataset.status)
+          setTimeout(function () {
             if (that.data.signHeight > that.data.windowHeight) {
-              that.buildAddAnimation("up")
+              that.buildAddAnimation("down")
             }
             wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
               that.setData({
@@ -92,53 +119,25 @@ Page({
               })
             }).exec();
           }, 500)
-        } else if (res.cancel) {
-          console.log('用户点击取消')
         }
       }
     })
-    
-  },
-  //添加习惯
-  addSign(e){
-    var name = e.detail.value.rName
-      , array = this.data.signInData
-      , date = this.data.nowDate;
-    if (name == null || name == ""){
-      this.buildFormAnimation(e.currentTarget.dataset.status)
-      return;
-    }
-
-    var id = array[array.length - 1].id + 1;
-    var newSign = { id: id, name: name, date: date, dayCount: '0', contCount: '0' };
-    this.setData({
-      signInData: this.data.signInData.concat(newSign)
-    });
-    this.buildFormAnimation(e.currentTarget.dataset.status)
-    var that = this;
-    setTimeout(function () {
-      if (that.data.signHeight > that.data.windowHeight) {
-        that.buildAddAnimation("down")
-      }
-      wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
-        that.setData({
-          signHeight: rect.height
-        })
-      }).exec();
-    }, 500)
-
-
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      openid: options.openid
+    })
+
+    this.getsignindata();
+
     var date = new Date()
     this.setData({
       month: util.formatMonth(date),
-      day: util.formatDay(date),
-      nowDate: util.formatDate(date)
+      day: util.formatDay(date)
     })
     var windowHeight = 0
       , signHeight = 0;
@@ -196,6 +195,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
+    this.getsignindata();
     setTimeout(function(){
       wx.stopPullDownRefresh()
     }, 3000)
@@ -303,6 +303,34 @@ Page({
         }
       );
     }
+  },
+
+  //获取后台的数据
+  getsignindata: function() {
+    var that = this;
+    db.collection('busi_sign_in').where({
+      openid: this.data.openid
+    }).field({
+      begin_date: true,
+      cont_count: true,
+      day_count: true,
+      _id: true,
+      name: true
+    })
+    .get({
+      success(res) {
+        if (res.data != null && res.data.length > 0) {
+          for (var i = 0; i < res.data.length; ++i) {
+            var date = util.formatDate(res.data[i].begin_date);
+            res.data[i].begin_date = date
+          }
+          that.setData({
+            signInData: res.data
+          })
+          console.log(that.data.signInData)
+        }
+      }
+    })
   }
 
 })

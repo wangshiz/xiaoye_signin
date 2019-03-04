@@ -25,6 +25,7 @@ Page({
       return
     }
 
+  
     // 获取用户信息
     wx.getSetting({
 
@@ -43,14 +44,15 @@ Page({
             }
           })
           var that = this;
-
+          that.onGetOpenid();
+          var open_id = getApp().globalData.openid;
           that.data.setInter = setInterval(
             function () {
               var numVal = that.data.num -1;
               that.setData({ num: numVal });
               if (that.data.num == 0){
                 wx.redirectTo({
-                  url: '../index/index',
+                  url: '../index/index?openid=' + getApp().globalData.openid,
                 })
               }
             }
@@ -70,14 +72,15 @@ Page({
         viewDisplay: 'block'
       })
       var that = this;
-
+      that.onGetOpenid();
+      var open_id = getApp().globalData.openid;
       that.data.setInter = setInterval(
         function () {
           var numVal = that.data.num - 1;
           that.setData({ num: numVal });
           if (that.data.num == 0) {
             wx.redirectTo({
-              url: '../index/index',
+              url: '../index/index?openid=' + getApp().globalData.openid,
             })
           }
         }
