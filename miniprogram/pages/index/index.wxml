@@ -6,8 +6,7 @@
     <view class="sign-month">{{month}}</view>
   </view>
   <view class='sign-box'>
-    <view wx:for="{{signInData}}" wx:item="{{item}}" wx:key="trem" class="sign-item" bindtap='goToSignPage' data-id='{{item.id}}'>
-      <input value='{{item.id}}' style='display: none;'/>
+    <view wx:for="{{signInData}}" wx:item="{{item}}" wx:key="trem" class="sign-item" bindtap='goToSignPage' data-id='{{item._id}}'>
       <view class="sign-name">{{item.name}}</view>
       <view class="sign-date">{{item.begin_date}}</view>
       <view class="sign-day-count">已坚持<text class="day-item">{{item.day_count}}</text>天</view>

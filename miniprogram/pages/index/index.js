@@ -18,7 +18,7 @@ Page({
     dateCount: 10,
     showFormStatus: false,
     signAddDisplay: false,
-    open_id: null
+    openid: null
   },
   //打开form表单
   openForm(e){
@@ -29,10 +29,10 @@ Page({
   //跳转页面
   goToSignPage(e){
     var id = e.currentTarget.dataset.id;
-
-    if (id != null && id > 0){
+    if (id != null){
+      var openid = this.data.openid;
       wx.navigateTo({
-        url: '../signin/signin?id='+id,
+        url: '../signin/signin?id='+id+'&openid='+openid,
         success: function (){
 
         },
