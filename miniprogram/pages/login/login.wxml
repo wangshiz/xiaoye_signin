@@ -1,6 +1,8 @@
 <!--pages/login/login.wxml-->
 <view class='userinfo'>
-  <view class="userinfo-avatar" style="background-image: url({{avatarUrl}})"></view>
+  <view>
+    <image src="{{avatarUrl}}" class="userinfo-image"></image>
+  </view>
     <button open-type="getUserInfo" 
       bindgetuserinfo="onGetUserInfo" class="userinfotext" type="primary" style="display: {{buttonDisplay}};">点击此处完成用户授权</button>
     <view class="successed" style="display: {{viewDisplay}};">(你已通过验证，{{num}}秒后跳转到页面)</view>

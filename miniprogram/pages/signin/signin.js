@@ -14,7 +14,8 @@ Page({
   onLoad: function (options) {
     console.log(options)
     this.setData({        
-      id:options.id
+      id:options.id,
+      openid:options.openid
     })
   },
 

@@ -1,2 +1,6 @@
 <!--ono/signin/signin.wxml-->
-<text>{{id}}</text>
+<view>123</view>
+
+<view class="sign-add" >
+  <button type="primary" bindtap='openForm' data-status='open'>添加一条习惯</button>
+</view>
