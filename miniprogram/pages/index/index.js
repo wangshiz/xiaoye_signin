@@ -63,17 +63,39 @@ Page({
         if (res.confirm) {
           db.collection('busi_sign_in').doc(id).remove({
             success(res) {
-              that.getsignindata();
-              setTimeout(function () {
-                if (that.data.signHeight > that.data.windowHeight) {
-                  that.buildAddAnimation("up")
-                }
-                wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
-                  that.setData({
-                    signHeight: rect.height
-                  })
-                }).exec();
-              }, 500)
+              db.collection('busi_sign_in').where({
+                openid: that.data.openid
+              }).field({
+                begin_date: true,
+                cont_count: true,
+                day_count: true,
+                _id: true,
+                name: true
+              })
+                .get({
+                  success(res) {
+                    console.log(res)
+                    if (res.data != null && res.data.length > 0) {
+                      for (var i = 0; i < res.data.length; ++i) {
+                        var date = util.formatDate(res.data[i].begin_date);
+                        res.data[i].begin_date = date
+                      }
+                      that.setData({
+                        signInData: res.data
+                      })
+                      setTimeout(function () {
+                        if (that.data.signHeight > that.data.windowHeight) {
+                          that.buildAddAnimation("up")
+                        }
+                        wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
+                          that.setData({
+                            signHeight: rect.height
+                          })
+                        }).exec();
+                      }, 500)
+                    }
+                  }
+                })
             }
           })
         } else if (res.cancel) {
@@ -107,18 +129,39 @@ Page({
         console.log("res=>"+res._id)
         // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
         if (res._id != null && res._id != "") {
-          that.getsignindata();
-          that.buildFormAnimation(e.currentTarget.dataset.status)
-          setTimeout(function () {
-            if (that.data.signHeight > that.data.windowHeight) {
-              that.buildAddAnimation("down")
-            }
-            wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
-              that.setData({
-                signHeight: rect.height
-              })
-            }).exec();
-          }, 500)
+          db.collection('busi_sign_in').where({
+            openid: that.data.openid
+          }).field({
+            begin_date: true,
+            cont_count: true,
+            day_count: true,
+            _id: true,
+            name: true
+          })
+            .get({
+              success(res) {
+                if (res.data != null && res.data.length > 0) {
+                  for (var i = 0; i < res.data.length; ++i) {
+                    var date = util.formatDate(res.data[i].begin_date);
+                    res.data[i].begin_date = date
+                  }
+                  that.setData({
+                    signInData: res.data
+                  })
+                  that.buildFormAnimation(e.currentTarget.dataset.status)
+                  setTimeout(function () {
+                    if (that.data.signHeight > that.data.windowHeight) {
+                      that.buildAddAnimation("down")
+                    }
+                    wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
+                      that.setData({
+                        signHeight: rect.height
+                      })
+                    }).exec();
+                  }, 500)
+                }
+              }
+            })
         }
       }
     })
@@ -131,8 +174,6 @@ Page({
     this.setData({
       openid: options.openid
     })
-
-    this.getsignindata();
 
     var date = new Date()
     this.setData({
@@ -149,18 +190,43 @@ Page({
       }
     })
     var that = this;
-    wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
-      signHeight = rect.height;
-      if (signHeight <= windowHeight) {
-        that.buildAddAnimation("up")
-      } else {
-        that.buildAddAnimation("down")
-      }
-      that.setData({
-        windowHeight: windowHeight,
-        signHeight: signHeight
+    db.collection('busi_sign_in').where({
+      openid: this.data.openid
+    }).field({
+      begin_date: true,
+      cont_count: true,
+      day_count: true,
+      _id: true,
+      name: true
+    })
+      .get({
+        success(res) {
+          if (res.data != null && res.data.length > 0) {
+            for (var i = 0; i < res.data.length; ++i) {
+              var date = util.formatDate(res.data[i].begin_date);
+              res.data[i].begin_date = date
+            }
+            that.setData({
+              signInData: res.data
+            })
+
+            wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
+              signHeight = rect.height;
+              if (signHeight <= windowHeight) {
+                that.buildAddAnimation("up")
+              } else {
+                that.buildAddAnimation("down")
+              }
+              that.setData({
+                windowHeight: windowHeight,
+                signHeight: signHeight
+              })
+            }).exec();
+          }
+        }
       })
-    }).exec();
+
+
   },
 
   /**
@@ -195,10 +261,30 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.getsignindata();
-    setTimeout(function(){
-      wx.stopPullDownRefresh()
-    }, 3000)
+    db.collection('busi_sign_in').where({
+      openid: this.data.openid
+    }).field({
+      begin_date: true,
+      cont_count: true,
+      day_count: true,
+      _id: true,
+      name: true
+    })
+      .get({
+        success(res) {
+          if (res.data != null && res.data.length > 0) {
+            for (var i = 0; i < res.data.length; ++i) {
+              var date = util.formatDate(res.data[i].begin_date);
+              res.data[i].begin_date = date
+            }
+            that.setData({
+              signInData: res.data
+            })
+            wx.stopPullDownRefresh();
+
+          }
+        }
+      })
   },
 
   onPageScroll: function (e) {
@@ -246,7 +332,7 @@ Page({
       if (status == "close") {
         this.setData(
           {
-            showFormStatus: false
+            showFormStatus: false,
           }
         );
       }
@@ -256,7 +342,7 @@ Page({
     if (status == "open") {
       this.setData(
         {
-          showFormStatus: true
+          showFormStatus: true,
         }
       );
     }
@@ -305,32 +391,5 @@ Page({
     }
   },
 
-  //获取后台的数据
-  getsignindata: function() {
-    var that = this;
-    db.collection('busi_sign_in').where({
-      openid: this.data.openid
-    }).field({
-      begin_date: true,
-      cont_count: true,
-      day_count: true,
-      _id: true,
-      name: true
-    })
-    .get({
-      success(res) {
-        if (res.data != null && res.data.length > 0) {
-          for (var i = 0; i < res.data.length; ++i) {
-            var date = util.formatDate(res.data[i].begin_date);
-            res.data[i].begin_date = date
-          }
-          that.setData({
-            signInData: res.data
-          })
-          console.log(that.data.signInData)
-        }
-      }
-    })
-  }
 
 })

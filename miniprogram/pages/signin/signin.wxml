@@ -1,6 +1,10 @@
 <!--ono/signin/signin.wxml-->
-<view>123</view>
+<view>
+  <view>《</view>
+  <view>2019年3月</view>
+  <view>》</view>
+</view>
 
 <view class="sign-add" >
-  <button type="primary" bindtap='openForm' data-status='open'>添加一条习惯</button>
+  <button type="primary" bindtap='makesignin' data-status='open'>完成今日打卡</button>
 </view>

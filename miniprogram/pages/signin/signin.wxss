@@ -1,1 +1,14 @@
 /* ono/signin/signin.wxss */
+.sign-add {
+  margin:1.5%;
+  text-align:center;
+  position:fixed;
+  bottom:0;
+  width:97%;
+
+}
+
+.sign-add button{
+  width: 100%;
+  font-size: 32rpx;
+}

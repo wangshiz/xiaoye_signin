@@ -30,7 +30,7 @@
   <view class="drawer_content">  
     <view class="top grid">  
       <label class="title col-0">标题</label>  
-      <input class="input_base input_h30 col-1" name="rName" value="" placeholder="输入习惯"></input>  
+      <input class="input_base input_h30 col-1" name="rName" value="" placeholder="输入习惯" ></input>  
     </view>  
   </view>
   <button class="btn_ok" form-type="submit">确定</button>
