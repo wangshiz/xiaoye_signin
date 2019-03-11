@@ -84,13 +84,16 @@ Page({
                         signInData: res.data
                       })
                       setTimeout(function () {
-                        if (that.data.signHeight > that.data.windowHeight) {
-                          that.buildAddAnimation("up")
-                        }
                         wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
                           that.setData({
                             signHeight: rect.height
                           })
+                          console.log("1:"+rect.height)
+                          console.log("2:"+that.data.windowHeight)
+                          // if (rect.height + 55 < that.data.windowHeight) {
+                          //   console.log(123)
+                            that.buildAddAnimation("up")
+                          //}
                         }).exec();
                       }, 500)
                     }
@@ -150,14 +153,18 @@ Page({
                   })
                   that.buildFormAnimation(e.currentTarget.dataset.status)
                   setTimeout(function () {
-                    if (that.data.signHeight > that.data.windowHeight) {
-                      that.buildAddAnimation("down")
-                    }
                     wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
                       that.setData({
                         signHeight: rect.height
                       })
+                      console.log("1:" + rect.height)
+                      console.log("2:" + that.data.windowHeight)
+                      if (rect.height + 55 > that.data.windowHeight) {
+                        console.log(345)
+                        that.buildAddAnimation("down")
+                      }
                     }).exec();
+
                   }, 500)
                 }
               }
@@ -212,7 +219,7 @@ Page({
 
             wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
               signHeight = rect.height;
-              if (signHeight <= windowHeight) {
+              if (signHeight + 55 <= windowHeight) {
                 that.buildAddAnimation("up")
               } else {
                 that.buildAddAnimation("down")
