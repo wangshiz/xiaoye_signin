@@ -11,4 +11,5 @@
 .sign-add button{
   width: 100%;
   font-size: 32rpx;
+  margin-top: 20rpx;
 }

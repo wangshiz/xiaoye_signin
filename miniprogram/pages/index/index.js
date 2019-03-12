@@ -14,11 +14,13 @@ Page({
     takeSession: false,
     month: null,
     day: null,
+    nowDay: null,
     signInData: [],
     dateCount: 10,
     showFormStatus: false,
     signAddDisplay: false,
-    openid: null
+    openid: null,
+    minusIcon: '../../images/ok.png'
   },
   //打开form表单
   openForm(e){
@@ -185,7 +187,8 @@ Page({
     var date = new Date()
     this.setData({
       month: util.formatMonth(date),
-      day: util.formatDay(date)
+      day: util.formatDay(date),
+      nowDay: util.formatDate(date)
     })
     var windowHeight = 0
       , signHeight = 0;
@@ -204,14 +207,20 @@ Page({
       cont_count: true,
       day_count: true,
       _id: true,
-      name: true
+      name: true,
+      last_sign_date: true
     })
       .get({
         success(res) {
+          console.log(res)
           if (res.data != null && res.data.length > 0) {
             for (var i = 0; i < res.data.length; ++i) {
               var date = util.formatDate(res.data[i].begin_date);
-              res.data[i].begin_date = date
+              res.data[i].begin_date = date;
+              if (res.data[i].last_sign_date != null){
+                var lastSignDay = util.formatDate(res.data[i].last_sign_date);
+                res.data[i].last_sign_date = lastSignDay;
+              }
             }
             that.setData({
               signInData: res.data
@@ -232,8 +241,6 @@ Page({
           }
         }
       })
-
-
   },
 
   /**

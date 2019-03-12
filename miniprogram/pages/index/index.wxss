@@ -4,8 +4,6 @@ page {
   margin: 0 auto;
 }
 
-
-
 .sign-now {
   height: 140rpx;
   margin-left: 24rpx;
@@ -70,17 +68,13 @@ page {
 .sign-minus {
   position:absolute;
   right: 20rpx;
-  bottom: 20rpx;
-  font-size: 20rpx;
-  padding: 0rpx 6rpx;
-  color: #DD524D;
-  border: 1px solid #DD524D;
-  border-radius: 20rpx;
+  bottom: 0rpx;
+
 }
 
 .sign-minus image {
-  width: 40rpx;
-  height: 40rpx;
+  width: 100rpx;
+  height: 100rpx;
 }
 
 .sign-day-count {
