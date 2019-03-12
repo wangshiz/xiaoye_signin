@@ -1,9 +1,11 @@
 <!--ono/signin/signin.wxml-->
-<view>
-  <view>《</view>
-  <view>2019年3月</view>
-  <view>》</view>
+<view style="border: 1px solid black;height:750rpx;">
+  <view style="border: 1px solid black;">
+    <view>2019年3月</view>
+  </view>
+
 </view>
+
 
 
 <swiper  class="sign-add">
