@@ -1,40 +1,59 @@
 // ono/signin/signin.js
+const db = wx.cloud.database()
+
 Page({
 
-  /**
-   * 页面的初始数据
-   */
   data: {
-    id: null
+    id: null,
+    openId: null,
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-    console.log(options)
-    this.setData({        
-      id:options.id,
-      openid:options.openid
+    this.setData({
+      id: options.id,
+      openId: options.openid
+    })
+    db.collection('busi_sign_in').where({
+      openid: options.openid,
+      _id: options.id
+    }).field({
+      begin_date: true,
+      cont_count: true,
+      day_count: true,
+      _id: true,
+      name: true,
+      last_sign_date: true
+    }).get({
+        success(res) {
+          if (res.data != null && res.data.length > 0) {
+            wx.setNavigationBarTitle({
+              title: res.data[0].name
+            })
+          }
+        }
+      })
+  },
+
+  //删除习惯
+  signDelete(e) {
+    var id = e.currentTarget.dataset.id
+      , that = this;
+    wx.showModal({
+      title: '',
+      content: '确定要放弃吗',
+      success(res) {
+        if (res.confirm) {
+          db.collection('busi_sign_in').doc(id).remove({
+            success(res) {
+              wx.reLaunch({
+                url: '../index/index?openid=' + that.data.openId,
+              })
+            }
+          })
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
     })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
- 
-
-
-
 })

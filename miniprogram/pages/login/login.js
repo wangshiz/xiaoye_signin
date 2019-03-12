@@ -89,7 +89,6 @@ Page({
   },
 
   onGetOpenid: function () {
-    console.log()
     // 调用云函数
     wx.cloud.callFunction({
       name: 'login',

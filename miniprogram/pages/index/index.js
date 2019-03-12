@@ -4,9 +4,6 @@ const db = wx.cloud.database()
 
 Page({
 
-  /**
-   * 页面的初始数据
-   */
   data: {
     showSignStatus: false,
     showAuthorizationStatus: false,
@@ -22,9 +19,9 @@ Page({
     openid: null,
     minusIcon: '../../images/ok.png'
   },
+
   //打开form表单
   openForm(e){
-    console.log(e.currentTarget.dataset.status)
     this.buildFormAnimation(e.currentTarget.dataset.status)
   },
 
@@ -54,61 +51,6 @@ Page({
       })
     }
   },
-  //删除习惯
-  signDelete(e){
-    var id = e.currentTarget.dataset.id
-      , that = this;
-    wx.showModal({
-      title: '',
-      content: '确定要放弃吗',
-      success(res) {
-        if (res.confirm) {
-          db.collection('busi_sign_in').doc(id).remove({
-            success(res) {
-              db.collection('busi_sign_in').where({
-                openid: that.data.openid
-              }).field({
-                begin_date: true,
-                cont_count: true,
-                day_count: true,
-                _id: true,
-                name: true
-              })
-                .get({
-                  success(res) {
-                    console.log(res)
-                    if (res.data != null && res.data.length > 0) {
-                      for (var i = 0; i < res.data.length; ++i) {
-                        var date = util.formatDate(res.data[i].begin_date);
-                        res.data[i].begin_date = date
-                      }
-                      that.setData({
-                        signInData: res.data
-                      })
-                      setTimeout(function () {
-                        wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
-                          that.setData({
-                            signHeight: rect.height
-                          })
-                          console.log("1:"+rect.height)
-                          console.log("2:"+that.data.windowHeight)
-                          // if (rect.height + 55 < that.data.windowHeight) {
-                          //   console.log(123)
-                            that.buildAddAnimation("up")
-                          //}
-                        }).exec();
-                      }, 500)
-                    }
-                  }
-                })
-            }
-          })
-        } else if (res.cancel) {
-          console.log('用户点击取消')
-        }
-      }
-    })
-  },
 
   //添加习惯
   addSign(e){
@@ -131,7 +73,6 @@ Page({
         last_sign_date: null        
       },
       success(res) {
-        console.log("res=>"+res._id)
         // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
         if (res._id != null && res._id != "") {
           db.collection('busi_sign_in').where({
@@ -159,10 +100,7 @@ Page({
                       that.setData({
                         signHeight: rect.height
                       })
-                      console.log("1:" + rect.height)
-                      console.log("2:" + that.data.windowHeight)
                       if (rect.height + 55 > that.data.windowHeight) {
-                        console.log(345)
                         that.buildAddAnimation("down")
                       }
                     }).exec();
@@ -176,9 +114,6 @@ Page({
     })
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
     this.setData({
       openid: options.openid
@@ -212,7 +147,6 @@ Page({
     })
       .get({
         success(res) {
-          console.log(res)
           if (res.data != null && res.data.length > 0) {
             for (var i = 0; i < res.data.length; ++i) {
               var date = util.formatDate(res.data[i].begin_date);
@@ -243,37 +177,6 @@ Page({
       })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh: function () {
     db.collection('busi_sign_in').where({
       openid: this.data.openid
@@ -404,6 +307,4 @@ Page({
       );
     }
   },
-
-
 })
