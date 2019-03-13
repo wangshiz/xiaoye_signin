@@ -2,16 +2,13 @@
 .sign-add {
   margin:0.5%;
   text-align:center;
-  position:fixed;
-  bottom:0;
   width:99%;
   height: 100rpx;
 }
 
+
 .sign-add button{
-  width: 99%;
   font-size: 32rpx;
-  margin-top: 20rpx;
 }
 
 

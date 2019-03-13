@@ -31,14 +31,12 @@
   </view>
  </view>
 
-
-<swiper  class="sign-add">
-
+<swiper class="sign-add">
   <swiper-item>
-    <button type="primary" catchtap='makesignin' data-status='open'>完成今日打卡</button>
+    <button type="primary" catchtap='makesignin' data-status='open' style='width: 66.66%;'>完成今日打卡</button>
   </swiper-item>
-  <swiper-item style="width: 375px;">
-    <button type="warn" data-status='open' catchtap='signDelete' data-id='{{id}}'>删除</button>
+  <swiper-item>
+    <button type="warn" data-status='open' catchtap='signDelete' data-id='{{id}}' style='width: 66.66%;'>删除</button>
   </swiper-item>
 </swiper>
 
