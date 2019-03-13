@@ -4,6 +4,7 @@
     "pages/signin/signin",
         "pages/login/login",
         "pages/index/index",
+
     "pages/error/error"
   ],
   "window": {

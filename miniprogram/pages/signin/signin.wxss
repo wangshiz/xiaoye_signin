@@ -10,7 +10,56 @@
 
 .sign-add button{
   width: 99%;
-
   font-size: 32rpx;
   margin-top: 20rpx;
+}
+
+.sign-detail {
+  width: 97%;
+  margin: 1.5%;
+  height: 200rpx;
+  border: 1px solid black;
+  background-color:#FFFFFF;
+  border-radius: 10rpx;
+
+}
+
+.sign-canvas {
+  position: relative;
+}
+
+.cir {
+  width:240rpx; 
+  height:200rpx; 
+  border: 1px solid black;
+}
+
+.cc {
+  font-size: 32rpx;
+  color:#1EB5A1;
+  width:240rpx;
+  height: auto;
+  text-align: center;
+  position: absolute;
+  border: 1px solid black;
+
+}
+
+.containers {
+  border: 1px solid black;
+  height:750rpx;
+
+}
+
+.yearmonth {
+  border: 1px solid black;
+  width: 30%;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  margin-left: -15%;
+  font-size: 32rpx;
+  color:#1EB5A1;
+  font-style: oblique;
+  font-weight: 600;
 }

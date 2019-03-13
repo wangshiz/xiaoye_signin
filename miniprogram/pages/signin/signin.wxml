@@ -1,11 +1,22 @@
 <!--ono/signin/signin.wxml-->
-<view style="border: 1px solid black;height:750rpx;">
-  <view style="border: 1px solid black;">
-    <view>2019年3月</view>
+<view class="containers">
+  <view class="yearmonth">
+    <view>{{yearMonth}}</view>
   </view>
-
+  <view>
+  
+  
+  
+  
+  </view>
 </view>
 
+<view class="sign-detail">
+  <view class="sign-canvas">
+      <canvas class="cir" canvas-id="canvasArc"></canvas> 
+      <view class="cc">1/2</view> 
+  </view>
+ </view>
 
 
 <swiper  class="sign-add">
