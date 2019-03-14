@@ -1,10 +1,13 @@
 <!--ono/signin/signin.wxml-->
 <view class="containers">
   <view class="yearmonth">
-    <view>{{yearMonth}}</view>
+    <view class="yearmonth_text">{{yearMonth}}</view>
   </view>
-  <view>
-  
+
+  <view class="day-box" >
+  <view wx:key="week" wx:for='{{week}}' wx:item="item">
+    <view class='weekday-box'>{{item}}</view>
+  </view>
   
   
   
@@ -39,8 +42,3 @@
     <button type="warn" data-status='open' catchtap='signDelete' data-id='{{id}}' style='width: 66.66%;'>删除</button>
   </swiper-item>
 </swiper>
-
-<!-- <view class="sign-add" >
-  <button type="primary" catchtap='makesignin' data-status='open'>完成今日打卡</button>
-  <button type="warn" data-status='open' catchtap='signDelete' data-id='{{id}}'>删除</button>
-</view> -->

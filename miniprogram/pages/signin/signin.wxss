@@ -15,8 +15,8 @@
 
 .sign-detail {
   width: 97%;
-  margin: 1.5%;
-  height: 100px;
+  margin: 2% 1.5%;
+  height: 200rpx;
   background-color:#FFFFFF;
   border-radius: 10rpx;
   position: relative;
@@ -31,44 +31,70 @@
 
 .cir {
   width: 100%; 
-  height:80px; 
-  border: 1px solid black;
+  height:160rpx; 
+  /* border: 1px solid black; */
 }
 
 .cc {
-  font-size: 12px;
+  font-size: 24rpx;
   color:#1EB5A1;
-  width:120px;
+  width:100%;
   text-align: center;
   position: absolute;
-  top: 34px;
-  border: 1px solid black;
+  top: 68rpx;
+  /* border: 1px solid black; */
 }
 
 .cr {
-  font-size: 12px;
+  font-size: 24rpx;
   color:#1EB5A1;
-  width:120px;
+  width:100%;
   text-align: center;
   position: absolute;
 }
 
 
 .containers {
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  width: 97%;
   height:750rpx;
+  margin-left: 1.5%;
+}
 
+.day-box {
+  border-left: 2rpx solid #0F4C3A;
+  border-right: 2rpx solid #0F4C3A;
+  border-bottom: 2rpx solid #0F4C3A;
+  width: 100%;
+  height: 690rpx;
+  background-color:#FDFBFE; 
 }
 
 .yearmonth {
-  border: 1px solid black;
-  width: 30%;
+  border: 2rpx solid #0F4C3A; 
+  width: 100%;
   text-align: center;
-  position: absolute;
-  left: 50%;
-  margin-left: -15%;
-  font-size: 32rpx;
-  color:#1EB5A1;
+  height: 60rpx;
+
   font-style: oblique;
   font-weight: 600;
+  border-top-left-radius:60rpx;
+  border-top-right-radius:60rpx;
+  background-color: #5DAC81;
+}
+
+.yearmonth_text{
+   width: 66.66%;
+   margin-left: 16.67%;
+   position: absolute;
+   top: 14rpx;
+  font-size: 32rpx;
+  color: #E6FFFD;
+}
+
+.weekday-box {
+  width: 14.28%;
+  height: 50rpx;
+  float: left;
+  text-align:center;
 }
