@@ -8,9 +8,6 @@
   <view wx:key="week" wx:for='{{week}}' wx:item="item">
     <view class='weekday-box'>{{item}}</view>
   </view>
-  
-  
-  
   </view>
 </view>
 
