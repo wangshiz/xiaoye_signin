@@ -46,11 +46,25 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+const getNowMonthDate = date => {
+
+  return new Date(date.getFullYear(), date.getMonth() + 1,0).getDate()
+}
+
+const getNowYearDate = date => {
+  var start_date = new Date(date.getFullYear, 1, 0).getTime()
+    , end_date = new Date(date.getFullYear + 1, 1, 0).getTime()
+
+  return parseInt((end_date.getTime() - start_date.getTime()) / (1000 * 60 * 60 * 24))
+}
+
 module.exports = {
   formatTime: formatTime,
   formatYear: formatYear,
   formatMonth: formatMonth,
   formatDay: formatDay,
   formatDate: formatDate,
-  formatYearMonth: formatYearMonth
+  formatYearMonth: formatYearMonth,
+  getNowMonthDate: getNowMonthDate,
+  getNowYearDate: getNowYearDate
 }
