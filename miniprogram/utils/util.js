@@ -52,8 +52,8 @@ const getNowMonthDate = date => {
 }
 
 const getNowYearDate = date => {
-  var start_date = new Date(date.getFullYear, 1, 0).getTime()
-    , end_date = new Date(date.getFullYear + 1, 1, 0).getTime()
+  var start_date = new Date(date.getFullYear(), 1, 0)
+    , end_date = new Date(date.getFullYear() + 1, 1, 0);
 
   return parseInt((end_date.getTime() - start_date.getTime()) / (1000 * 60 * 60 * 24))
 }

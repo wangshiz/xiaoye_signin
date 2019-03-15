@@ -61,57 +61,7 @@ Page({
       this.buildFormAnimation(e.currentTarget.dataset.status)
       return;
     }
-
-    db.collection('busi_sign_in').add({
-      // data 字段表示需新增的 JSON 数据
-      data: {
-        openid: openid,
-        name: name,
-        begin_date: db.serverDate(),
-        cont_count: 0,
-        day_count: 0,
-        last_sign_date: null        
-      },
-      success(res) {
-        // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
-        if (res._id != null && res._id != "") {
-          db.collection('busi_sign_in').where({
-            openid: that.data.openid
-          }).field({
-            begin_date: true,
-            cont_count: true,
-            day_count: true,
-            _id: true,
-            name: true
-          })
-            .get({
-              success(res) {
-                if (res.data != null && res.data.length > 0) {
-                  for (var i = 0; i < res.data.length; ++i) {
-                    var date = util.formatDate(res.data[i].begin_date);
-                    res.data[i].begin_date = date
-                  }
-                  that.setData({
-                    signInData: res.data
-                  })
-                  that.buildFormAnimation(e.currentTarget.dataset.status)
-                  setTimeout(function () {
-                    wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
-                      that.setData({
-                        signHeight: rect.height
-                      })
-                      if (rect.height + 55 > that.data.windowHeight) {
-                        that.buildAddAnimation("down")
-                      }
-                    }).exec();
-
-                  }, 500)
-                }
-              }
-            })
-        }
-      }
-    })
+    this.insertOneData(name);
   },
 
   onLoad: function (options) {
@@ -125,83 +75,14 @@ Page({
       day: util.formatDay(date),
       nowDay: util.formatDate(date)
     })
-    var windowHeight = 0
-      , signHeight = 0;
-    wx.getSystemInfo({
-      success: function (res) {
-        // 可使用窗口宽度、高度
-        windowHeight = res.windowHeight;
-        // 计算主体部分高度,单位为px
-      }
-    })
-    var that = this;
-    db.collection('busi_sign_in').where({
-      openid: this.data.openid
-    }).field({
-      begin_date: true,
-      cont_count: true,
-      day_count: true,
-      _id: true,
-      name: true,
-      last_sign_date: true
-    })
-      .get({
-        success(res) {
-          if (res.data != null && res.data.length > 0) {
-            for (var i = 0; i < res.data.length; ++i) {
-              var date = util.formatDate(res.data[i].begin_date);
-              res.data[i].begin_date = date;
-              if (res.data[i].last_sign_date != null){
-                var lastSignDay = util.formatDate(res.data[i].last_sign_date);
-                res.data[i].last_sign_date = lastSignDay;
-              }
-            }
-            that.setData({
-              signInData: res.data
-            })
 
-            wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
-              signHeight = rect.height;
-              if (signHeight + 55 <= windowHeight) {
-                that.buildAddAnimation("up")
-              } else {
-                that.buildAddAnimation("down")
-              }
-              that.setData({
-                windowHeight: windowHeight,
-                signHeight: signHeight
-              })
-            }).exec();
-          }
-        }
-      })
+    var that = this;
+    //查询
+    that.getMySignData("onLoad");
   },
 
   onPullDownRefresh: function () {
-    db.collection('busi_sign_in').where({
-      openid: this.data.openid
-    }).field({
-      begin_date: true,
-      cont_count: true,
-      day_count: true,
-      _id: true,
-      name: true
-    })
-      .get({
-        success(res) {
-          if (res.data != null && res.data.length > 0) {
-            for (var i = 0; i < res.data.length; ++i) {
-              var date = util.formatDate(res.data[i].begin_date);
-              res.data[i].begin_date = date
-            }
-            that.setData({
-              signInData: res.data
-            })
-            wx.stopPullDownRefresh();
-
-          }
-        }
-      })
+    this.getMySignData("flash");
   },
 
   onPageScroll: function (e) {
@@ -307,4 +188,100 @@ Page({
       );
     }
   },
+
+
+  getMySignData: function (scenes) {
+    wx.showLoading({
+      title: '加载中',
+    })
+    var that = this;
+    wx.cloud.callFunction({
+      name: 'fetch',
+      data: {},
+      success: res => {
+        console.log(res.result.data)
+        if (res.result.data != null && res.result.data.length > 0) {
+          var arr = res.result.data;
+          for (var i = 0; i < arr.length; ++i) {
+            var beginDate = new Date(arr[i].begin_date);
+            var date = util.formatDate(beginDate);
+            arr[i].begin_date = date;
+            if (arr[i].last_sign_date != null){
+              var lastSignDate = new Date(arr[i].last_sign_date);
+              var lastSignDay = util.formatDate(lastSignDate);
+              arr[i].last_sign_date = lastSignDay;
+            }
+          }
+          that.setData({
+            signInData: arr
+          })
+
+          if (scenes == "onLoad"){
+            var signHeight
+              , windowHeight = 0;
+            wx.getSystemInfo({
+              success: function (res) {
+                // 可使用窗口宽度、高度
+                windowHeight = res.windowHeight;
+                // 计算主体部分高度,单位为px
+              }
+            })
+            wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
+              signHeight = rect.height;
+              if (signHeight + 55 <= windowHeight) {
+                that.buildAddAnimation("up")
+              } else {
+                that.buildAddAnimation("down")
+              }
+              that.setData({
+                windowHeight: windowHeight,
+                signHeight: signHeight
+              })
+            }).exec();
+          }
+
+          if (scenes == "flash"){
+            wx.stopPullDownRefresh();
+          }
+
+          if (scenes == "add"){
+            that.buildFormAnimation('close')
+            wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
+              that.setData({
+                signHeight: rect.height
+              })  
+              if (rect.height + 55 > that.data.windowHeight) {
+                that.buildAddAnimation("down")
+              }
+            }).exec();
+          }
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [login] 调用失败', err)
+      },
+      complete: err =>{
+        wx.hideLoading()
+      }
+    })
+  },
+
+  insertOneData(name){
+    wx.cloud.callFunction({
+      name: 'insert',
+      data: {name: name},
+      success: res => {
+        console.log('[云函数] [login] user openid: ', res.result._id)
+        if (res.result._id != null && res.result._id != "") {
+          this.getMySignData("add");
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [login] 调用失败', err)
+        wx.navigateTo({
+          url: '.../error/error',
+        })
+      }
+    })
+  }
 })

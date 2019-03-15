@@ -94,8 +94,8 @@ Page({
       name: 'login',
       data: {},
       success: res => {
-        console.log('[云函数] [login] user openid: ', res.result.userInfo.openId)
-        app.globalData.openid = res.result.userInfo.openId
+        console.log('[云函数] [login] user openid: ', res.result.event.userInfo.openId)
+        app.globalData.openid = res.result.event.userInfo.openId
       },
       fail: err => {
         console.error('[云函数] [login] 调用失败', err)

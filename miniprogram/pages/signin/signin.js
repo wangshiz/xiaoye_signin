@@ -13,11 +13,14 @@ Page({
   onLoad: function (options) {
     var date = new Date();
     var yearMonth = util.formatYearMonth(date)
-    console.log(yearMonth);
+    var nowMonthDate = util.getNowMonthDate(date)
+    var nowYearDate = util.getNowYearDate(date)
     this.setData({
       id: options.id,
       openId: options.openid,
-      yearMonth: yearMonth
+      yearMonth: yearMonth,
+      nowMonthDate: nowMonthDate,
+      nowYearDate: nowYearDate
     })
     db.collection('busi_sign_in').where({
       openid: options.openid,
@@ -66,16 +69,24 @@ Page({
   signDelete(e) {
     var id = e.currentTarget.dataset.id
       , that = this;
+      console.log(id)
     wx.showModal({
       title: '',
       content: '确定要放弃吗',
       success(res) {
         if (res.confirm) {
+          wx.showLoading({
+            title: '加载中',
+          })
           db.collection('busi_sign_in').doc(id).remove({
             success(res) {
-              wx.reLaunch({
-                url: '../index/index?openid=' + that.data.openId,
-              })
+              console.log(res)
+              // wx.reLaunch({
+              //   url: '../index/index?openid=' + that.data.openId,
+              // })
+            },
+            complete(res) {
+              wx.hideLoading()
             }
           })
         } else if (res.cancel) {
