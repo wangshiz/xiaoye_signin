@@ -55,10 +55,6 @@ Page({
       , y = (pageWidth / 750) * 80
       , radius = (pageWidth / 750) * 60
 
-    console.log(x)
-    console.log(y)
-    console.log(radius)
-
     // 页面渲染完成  
     this.paintCanvas('canvasArc1', 6, 7, x, y, radius)
     this.paintCanvas('canvasArc2', 22, 31, x, y, radius)
@@ -69,26 +65,12 @@ Page({
   signDelete(e) {
     var id = e.currentTarget.dataset.id
       , that = this;
-      console.log(id)
     wx.showModal({
       title: '',
       content: '确定要放弃吗',
       success(res) {
         if (res.confirm) {
-          wx.showLoading({
-            title: '加载中',
-          })
-          db.collection('busi_sign_in').doc(id).remove({
-            success(res) {
-              console.log(res)
-              // wx.reLaunch({
-              //   url: '../index/index?openid=' + that.data.openId,
-              // })
-            },
-            complete(res) {
-              wx.hideLoading()
-            }
-          })
+          that.deleteOneSignIn(id)
         } else if (res.cancel) {
           console.log('用户点击取消')
         }
@@ -113,5 +95,30 @@ Page({
     cxt_arc.stroke();//对当前路径进行描边 
 
     cxt_arc.draw();
+  },
+
+  deleteOneSignIn(id){
+    wx.showLoading({
+      title: '加载中',
+    })
+    wx.cloud.callFunction({
+      name: 'remove',
+      data: { signId: id },
+      success: res => {
+        wx.reLaunch({
+          url: '../index/index?openid='+this.data.openId
+        })
+      },
+      fail: err => {
+        wx.showToast({
+          title: '网络开了小差~',
+          icon: 'none',
+          duration: 2000
+        })
+      },
+      complete: err => {
+        wx.hideLoading();
+      }
+    })
   }
 })

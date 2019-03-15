@@ -258,7 +258,11 @@ Page({
         }
       },
       fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
+        wx.showToast({
+          title: '网络开了小差~',
+          icon: 'none',
+          duration: 2000
+        })
       },
       complete: err =>{
         wx.hideLoading()
@@ -267,6 +271,9 @@ Page({
   },
 
   insertOneData(name){
+    wx.showLoading({
+      title: '添加中',
+    })
     wx.cloud.callFunction({
       name: 'insert',
       data: {name: name},
@@ -277,10 +284,14 @@ Page({
         }
       },
       fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
-        wx.navigateTo({
-          url: '.../error/error',
+        wx.showToast({
+          title: '网络开了小差~',
+          icon: 'none',
+          duration: 2000
         })
+      },
+      complete: err => {
+        wx.hideLoading()
       }
     })
   }
