@@ -104,6 +104,7 @@ Page({
   insertOneRecord(){
     console.log(this.data.id)
     console.log(this.data.openid)
+    this.insertOneSignInRecord();
   },
 
 
@@ -165,9 +166,11 @@ Page({
           wx.setNavigationBarTitle({
             title: sign.name,
           })
-          var select = util.formatOtherDate(new Date(sign.last_sign_date)) == this.data.today;
+          var lastSignDate = new Date(sign.last_sign_date)
+          var select = util.formatOtherDate(lastSignDate) == this.data.today;
           this.setData({
             disabled:  select,
+            lastSignDate: lastSignDate,
             disabledText: select ? "今日已打卡" : "完成今日打卡"
           })
         }
@@ -184,6 +187,49 @@ Page({
       }
     })
   },
+
+  insertOneSignInRecord(){
+    wx.showLoading({
+      title: '加载中',
+    })
+    console.log(this.data)
+    wx.cloud.callFunction({
+      name: 'insertrecord',
+      data: { 
+        signid: this.data.id,
+        lastSignDate: this.data.lastSignDate
+      },
+      success: res => {
+        console.log(res)
+      },
+      fail: err => {
+        wx.showToast({
+          title: '网络开了小差~',
+          icon: 'none',
+          duration: 2000
+        })
+      },
+      complete: err => {
+        wx.hideLoading()
+      }
+    })
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //日历处理方法
   showCaldenlar() {
