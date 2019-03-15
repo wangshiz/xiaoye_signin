@@ -13,7 +13,7 @@ exports.main = async (event, context) => {
   var dateMonth = date.getMonth() + 1;
   var dateDay = date.getDate(); 
   var nowDate = new Date(dateYear, dateMonth - 1, dateDay);
-  var lastSignDate = event.lastSignDate;
+  var lastSignDate = new Date(event.lastSignDate);
   var lastDate = new Date(lastSignDate.getFullYear(), lastSignDate.getMonth(), lastSignDate.getDate());
   var shouldAdd = true;
   if (nowDate - lastDate > 86400000) {

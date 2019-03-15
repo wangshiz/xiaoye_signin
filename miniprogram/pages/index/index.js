@@ -31,7 +31,7 @@ Page({
     if (id != null){
       var openid = this.data.openid;
       wx.navigateTo({
-        url: '../signin/signin?id='+id+'&openid='+openid,
+        url: '../signin/signin?id='+id,
       })
     } else {
       //失败

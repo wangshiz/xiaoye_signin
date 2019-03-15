@@ -38,7 +38,6 @@ Page({
     console.log(options)
     this.setData({
       id: options.id,
-      openId: options.openid,
       month: month,
       year: year,
       day: day,
@@ -166,8 +165,15 @@ Page({
           wx.setNavigationBarTitle({
             title: sign.name,
           })
-          var lastSignDate = new Date(sign.last_sign_date)
-          var select = util.formatOtherDate(lastSignDate) == this.data.today;
+          console.log(123)
+          console.log(sign.last_sign_date) 
+          var select = false;
+          var lastSignDate = null;
+          if (sign.last_sign_date != null) {
+            lastSignDate = new Date(sign.last_sign_date);
+            select = util.formatOtherDate(lastSignDate) == this.data.today;
+          } 
+
           this.setData({
             disabled:  select,
             lastSignDate: lastSignDate,
@@ -192,7 +198,8 @@ Page({
     wx.showLoading({
       title: '加载中',
     })
-    console.log(this.data)
+    console.log(this.data.id)
+    console.log(this.data.lastSignDate)  
     wx.cloud.callFunction({
       name: 'insertrecord',
       data: { 
