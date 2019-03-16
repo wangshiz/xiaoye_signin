@@ -135,7 +135,7 @@
 
 .choice view{
   border-radius: 50%;
-  background: #88a1fd;
+  background: #1AAD19;
   background-position:center;
   color: white;
 }

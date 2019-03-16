@@ -433,7 +433,7 @@ Page({
       , thisMonth = this.currentMonthDays(year, month)
       , nextMonth = this.nextMonthDays(year, month)
 
-      , days = [].concat(lastMonth, thisMonth, nextMonth)
+      , days = [].concat([null,null,null,null,null], thisMonth, nextMonth)
 
     console.log(lastMonth)
     console.log(thisMonth)
