@@ -97,6 +97,7 @@
   height: 50rpx;
   float: left;
   text-align:center;
+  /* border: 1px solid black; */
 }
 
 /* 日历样式 */
@@ -111,21 +112,27 @@
   
 }
 .grid {
-  width: 107.14rpx;
+  width: 14.28%;
   height: 100rpx;
-  text-align: center;
-  line-height: 100rpx;
-  font-size:.7rem;
+  font-size: 32rpx;
   color: black;
+     position: relative;
 }
 .today {
   color: #0F4C3A;
 }
 .grid view {
-  height:85rpx;
-  line-height: 85rpx;
-  width:85rpx;
+  position: absolute;
+  left: 50%;
+  top:50%;
+  margin-top: -40rpx;
+  margin-left: -40rpx;
+  text-align: center;
+  width: 80rpx;
+  height: 80rpx;
+  line-height: 82rpx;
 }
+
 .choice view{
   border-radius: 50%;
   background: #88a1fd;
@@ -140,7 +147,7 @@
   background: red;
 }
 .swpier-box {
-  height: 550rpx;
+  height: 640rpx;
   width: 100%;
 }
 
