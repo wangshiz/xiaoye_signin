@@ -1,7 +1,7 @@
 <!--ono/signin/signin.wxml-->
 <view class="containers">
   <view class="yearmonth">
-    <view class="yearmonth_text">{{yearMonth}}</view>
+    <view class="yearmonth_text">{{date}}</view>
   </view>
 
   <view class="day-box" >

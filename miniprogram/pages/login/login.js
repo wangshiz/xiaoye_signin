@@ -14,7 +14,7 @@ Page({
     //存储计时器
     setInter: '',
     num: 3,
-
+    isScope: false
   },
 
   onLoad: function () {
@@ -24,7 +24,7 @@ Page({
       })
       return
     }
-
+    var that = this;
   
     // 获取用户信息
     wx.getSetting({
@@ -32,31 +32,13 @@ Page({
       success: res => {
 
         if (res.authSetting['scope.userInfo']) {
-          //已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo,
-                buttonDisplay: 'none',
-                viewDisplay: 'block'
-              })
-            }
+          wx.redirectTo({
+            url: '../index/index?openid=' + getApp().globalData.openid,
+          })   
+        } else {
+          that.setData({
+            isScope: true
           })
-          var that = this;
-          that.onGetOpenid();
-          var open_id = getApp().globalData.openid;
-          that.data.setInter = setInterval(
-            function () {
-              var numVal = that.data.num -1;
-              that.setData({ num: numVal });
-              if (that.data.num == 0){
-                wx.redirectTo({
-                  url: '../index/index?openid=' + getApp().globalData.openid,
-                })
-              }
-            }
-            , 1000);   
         }
       }
     })
