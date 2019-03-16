@@ -8,7 +8,44 @@
   <view wx:key="week" wx:for='{{week}}' wx:item="item">
     <view class='weekday-box'>{{item}}</view>
   </view>
+  <swiper class='swpier-box' circular="true" current="{{swiperIndex}}" bindchange='swiperChange'>
+
+    <swiper-item class='flex m-around days-table '>
+      <view wx:for="{{calendar.first}}" wx:for-item='x' wx:key='x.date'
+        class='grid {{x.month === month?"":"notCurrent"}} {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}}' data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' bindtap='bindDayTap'>
+        <!-- <view>{{x.date === today?'今天':x.day}}</view> -->
+        <view>{{x.day}}</view>
+      </view>
+    </swiper-item>
+
+    <swiper-item class='flex m-around days-table '>
+      <view wx:for="{{calendar.second}}" wx:for-item='x' wx:key='x.date'
+        class='grid {{x.month === month?"":"notCurrent"}} {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}}' data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' data-test='{{(year + "-" +month + "-" + day)}}'  bindtap='bindDayTap'>
+        <!-- <view>{{x.date === today?'今天':x.day}}</view> -->
+        <view>{{x.day}}</view>
+      </view>
+    </swiper-item>
+
+    <swiper-item class='flex m-around days-table'>
+      <view wx:for="{{calendar.third}}" wx:for-item='x' wx:key='x.date'
+        class='grid {{x.month === month?"":"notCurrent"}} {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}}' data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' bindtap='bindDayTap'>
+        <!-- <view>{{x.date === today?'今天':x.day}}</view> -->
+        <view>{{x.day}}</view>
+      </view>
+    </swiper-item>
+
+    <swiper-item class='flex m-around days-table '>
+      <view wx:for="{{calendar.fourth}}" wx:for-item='x' wx:key='x.date'
+        class='grid {{x.month === month?"":"notCurrent"}} {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}}' data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' bindtap='bindDayTap'>
+        <!-- <view>{{x.date === today?'今天':x.day}}</view> -->
+        <view>{{x.day}}</view>
+      </view>
+    </swiper-item>
+
+  </swiper>
   </view>
+
+
 </view>
 
 <view class="sign-detail">
@@ -33,7 +70,7 @@
 
 <swiper class="sign-add">
   <swiper-item>
-    <button type="primary" catchtap='makesignin' data-status='open' style='width: 66.66%;'>完成今日打卡</button>
+    <button type="primary" catchtap='insertOneRecord' data-status='open' disabled='{{disabled}}' style='width: 66.66%;'>{{disabledText}}</button>
   </swiper-item>
   <swiper-item>
     <button type="warn" data-status='open' catchtap='signDelete' data-id='{{id}}' style='width: 66.66%;'>删除</button>

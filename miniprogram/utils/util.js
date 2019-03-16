@@ -21,6 +21,14 @@ const formatDate = date => {
   return [year, month, day].map(formatNumber).join('/')
 }
 
+const formatOtherDate = date => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+
+  return [year, month, day].map(formatNumber).join('-')
+}
+
 const formatYearMonth = date =>{
   const year = date.getFullYear()
   const month = date.getMonth() + 1 
@@ -66,5 +74,6 @@ module.exports = {
   formatDate: formatDate,
   formatYearMonth: formatYearMonth,
   getNowMonthDate: getNowMonthDate,
-  getNowYearDate: getNowYearDate
+  getNowYearDate: getNowYearDate,
+  formatOtherDate: formatOtherDate
 }

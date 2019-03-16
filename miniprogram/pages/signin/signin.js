@@ -9,7 +9,8 @@ Page({
     openId: null,
     day: '',
     month: '',
-    data: '',
+    date: '',
+    today: '',
     week: ['日', '一', '二', '三', '四', '五', '六'],
     calendar: {
       first: [],
@@ -19,7 +20,9 @@ Page({
     },
     swiperMap: ['first', 'second', 'third', 'fourth'],
     swiperIndex: 1,
-    showCaldenlar: false
+    showCaldenlar: false,
+    disabled: true,
+    disabledText: ""
   },
 
   onLoad: function (options) {
@@ -32,7 +35,7 @@ Page({
       , day = this.formatDay(date.getDate())
       , today = `${year}-${month}-${day}`;
     let calendar = this.generateThreeMonths(year, month)
-
+    console.log(options)
     this.setData({
       id: options.id,
       openId: options.openid,
@@ -40,10 +43,26 @@ Page({
       year: year,
       day: day,
       date: yearMonth,
+      today: today,
+      beSelectDate: today,
+      calendar: calendar,
       nowMonthDate: nowMonthDate,
       nowYearDate: nowYearDate
     })
+    console.log(this.data)
     this.fetchById()
+  },
+
+  onShow: function () {
+    var that = this;
+    wx.getStorage({
+      key: "openid",
+      success: function (res) {
+        that.setData({
+          openid: res.data
+        });
+      },
+    });
   },
 
   onReady: function() {
@@ -52,7 +71,7 @@ Page({
       success(res) {
         pageWidth = res.windowWidth;
       }
-    })
+    })  
 
     var x = (pageWidth /750) * 121.25
       , y = (pageWidth / 750) * 80
@@ -80,6 +99,13 @@ Page({
       }
     })
   },
+
+  //新增一个打卡记录
+  insertOneRecord(){
+    console.log(this.data.id)
+    console.log(this.data.openid)
+  },
+
 
   paintCanvas(canvasId, signCount, dateCount, x, y, radius) {
     var cxt_arc = wx.createCanvasContext(canvasId);//创建并返回绘图上下文context对象。 
@@ -127,19 +153,24 @@ Page({
 
   fetchById() {
     wx.showLoading({
-      title: '添加中',
+      title: '加载中',
     })
-    console.log(this.data.openId)
+    console.log(this.data)
     wx.cloud.callFunction({
       name: 'fetchbyid',
       data: { signid: this.data.id },
       success: res => {
         if (res.result.data != null && res.result.data.length > 0) {
           var sign = res.result.data[0];
-
+          wx.setNavigationBarTitle({
+            title: sign.name,
+          })
+          var select = util.formatOtherDate(new Date(sign.last_sign_date)) == this.data.today;
+          this.setData({
+            disabled:  select,
+            disabledText: select ? "今日已打卡" : "完成今日打卡"
+          })
         }
-        console.log('[云函数] [login] user openid: ', res)
-
       },
       fail: err => {
         wx.showToast({
@@ -155,7 +186,11 @@ Page({
   },
 
   //日历处理方法
-
+  showCaldenlar() {
+    this.setData({
+      showCaldenlar: !this.data.showCaldenlar
+    })
+  },
 
   /**
  * 

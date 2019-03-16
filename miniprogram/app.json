@@ -1,9 +1,9 @@
 {
   "pages": [
+
+    "pages/signin/signin",
         "pages/login/login",
         "pages/index/index",
-    "pages/signin/signin",
-
 
     "pages/error/error"
   ],

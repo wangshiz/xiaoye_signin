@@ -32,15 +32,6 @@ Page({
       var openid = this.data.openid;
       wx.navigateTo({
         url: '../signin/signin?id='+id+'&openid='+openid,
-        success: function (){
-
-        },
-        fail: function (){
-
-        },
-        complete: function (){
-          
-        }
       })
     } else {
       //失败
@@ -55,7 +46,6 @@ Page({
   //添加习惯
   addSign(e){
     var name = e.detail.value.rName
-      , openid = this.data.openid
       , that = this;
     if (name == null || name == ""){
       this.buildFormAnimation(e.currentTarget.dataset.status)
@@ -65,10 +55,9 @@ Page({
   },
 
   onLoad: function (options) {
-    this.setData({
-      openid: options.openid
-    })
+    var that = this;
 
+    
     var date = new Date()
     this.setData({
       month: util.formatMonth(date),
@@ -76,9 +65,20 @@ Page({
       nowDay: util.formatDate(date)
     })
 
-    var that = this;
     //查询
-    that.getMySignData("onLoad");
+    this.getMySignData("onLoad");
+  },
+
+  onShow: function() {
+    var that = this;
+    wx.getStorage({
+      key: "openid",
+      success: function (res) {
+        that.setData({
+          openid: res.data
+        });
+      },
+    });
   },
 
   onPullDownRefresh: function () {
@@ -191,10 +191,10 @@ Page({
 
 
   getMySignData: function (scenes) {
+    var that = this;
     wx.showLoading({
       title: '加载中',
     })
-    var that = this;
     wx.cloud.callFunction({
       name: 'fetch',
       data: {},
