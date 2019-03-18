@@ -101,8 +101,6 @@ Page({
 
   //新增一个打卡记录
   insertOneRecord(){
-    console.log(this.data.id)
-    console.log(this.data.openid)
     this.insertOneSignInRecord();
   },
 
@@ -165,7 +163,6 @@ Page({
           wx.setNavigationBarTitle({
             title: sign.name,
           })
-          console.log(123)
           console.log(sign.last_sign_date) 
           var select = false;
           var lastSignDate = null;
@@ -198,13 +195,14 @@ Page({
     wx.showLoading({
       title: '加载中',
     })
-    console.log(this.data.id)
-    console.log(this.data.lastSignDate)  
+    var signid = this.data.id;
+    var lastSignDate = this.data.lastSignDate == null ? null : this.data.lastSignDate.getTime();
+    console.log(lastSignDate)
     wx.cloud.callFunction({
       name: 'insertrecord',
       data: { 
-        signid: this.data.id,
-        lastSignDate: this.data.lastSignDate
+        signid: signid,
+        lastSignDate: lastSignDate
       },
       success: res => {
         console.log(res)
