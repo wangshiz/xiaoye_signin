@@ -82,7 +82,8 @@ Page({
   },
 
   onPullDownRefresh: function () {
-    this.getMySignData("flash");
+    this.onLoad();
+    // this.getMySignData("flash");
   },
 
   onPageScroll: function (e) {

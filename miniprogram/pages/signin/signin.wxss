@@ -97,6 +97,7 @@
   height: 50rpx;
   float: left;
   text-align:center;
+  line-height: 70rpx;
   /* border: 1px solid black; */
 }
 

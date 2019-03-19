@@ -10,6 +10,7 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const dbtime = db.serverDate();
   var date = new Date(Date.now());
+  var dateNum = date.getTime()
   var dateYear = date.getFullYear();
   var dateMonth = date.getMonth() + 1;
   var dateDay = date.getDate();
@@ -30,7 +31,8 @@ exports.main = async (event, context) => {
     await db.collection('busi_sign_in_record').add({
       data: {
         signid: event.signid,
-        date: dbtime,
+        date: date,
+        dateNum: dateNum,
         year: dateYear.toString(),
         month: dateMonth >= 10? dateMonth.toString(): "0"+dateMonth.toString(),
         day: dateDay >= 10 ? dateDay.toString() : "0" + dateDay.toString(),
@@ -39,7 +41,7 @@ exports.main = async (event, context) => {
 
     await db.collection('busi_sign_in').doc(event.signid).update({
       data: {
-        last_sign_date: dbtime,
+        last_sign_date: date,
         day_count: _.inc(1),
         cont_count: shouldAdd ?_.inc(1): 1
       }

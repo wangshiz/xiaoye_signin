@@ -8,7 +8,13 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   try {
-    return await db.collection('busi_sign_in').doc(event.signId).remove()
+    await db.collection('busi_sign_in').doc(event.signid).remove()
+    await db.collection('busi_sign_in_record').where({
+      signid: event.signid
+    }).remove()
+    return {
+      success
+    }
   } catch (e) {
     console.log(e)
   }

@@ -130,7 +130,7 @@ Page({
     })
     wx.cloud.callFunction({
       name: 'remove',
-      data: { signId: id },
+      data: { signid: id },
       success: res => {
         wx.reLaunch({
           url: '../index/index?openid='+this.data.openId
@@ -196,7 +196,7 @@ Page({
       title: '加载中',
     })
     var signid = this.data.id;
-    var lastSignDate = this.data.lastSignDate == null ? null : this.data.lastSignDate.getTime();
+    var lastSignDate = this.data.lastSignDate == null ? null :    this.data.lastSignDate.getTime();
     console.log(lastSignDate)
     wx.cloud.callFunction({
       name: 'insertrecord',
@@ -205,7 +205,7 @@ Page({
         lastSignDate: lastSignDate
       },
       success: res => {
-        console.log(res)
+        this.onLoad({id: this.data.id});
       },
       fail: err => {
         wx.showToast({
