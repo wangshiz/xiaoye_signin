@@ -56,8 +56,6 @@ Page({
 
   onLoad: function (options) {
     var that = this;
-
-    
     var date = new Date()
     this.setData({
       month: util.formatMonth(date),
@@ -83,7 +81,6 @@ Page({
 
   onPullDownRefresh: function () {
     this.onLoad();
-    // this.getMySignData("flash");
   },
 
   onPageScroll: function (e) {
@@ -201,7 +198,7 @@ Page({
       data: {},
       success: res => {
         console.log(res.result.data)
-        if (res.result.data != null && res.result.data.length > 0) {
+        if (res.result.data != null) {
           var arr = res.result.data;
           for (var i = 0; i < arr.length; ++i) {
             var beginDate = new Date(arr[i].begin_date);
@@ -216,7 +213,7 @@ Page({
           that.setData({
             signInData: arr
           })
-
+          
           if (scenes == "onLoad"){
             var signHeight
               , windowHeight = 0;
