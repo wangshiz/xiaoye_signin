@@ -67,17 +67,19 @@ const getNowMonthDate = date => {
 const getNowYearDate = date => {
   var start_date = new Date(date.getFullYear(), 1, 0)
     , end_date = new Date(date.getFullYear() + 1, 1, 0);
-  return parseInt((end_date.getTime() - start_date.getTime()) / (1000 * 60 * 60 * 24))
+  return parseInt((end_date.getTime() - start_date.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 //获取本周的开始日期
 const getWeekStartDate = date => {
-  return new Date(date.getFullYear(), date.getMonth(), date.nowDay - date.nowDayOfWeek + 1)
+  const nowDayOfWeek = date.getDay() == 0 ? 7 : date.getDay(); //今天是本周的第几天
+  return new Date(date.getFullYear(), date.getMonth(), date.nowDay - nowDayOfWeek + 1);
 }
 
 //获取本周的结束日期
 const getWeekEndformatDate = date => {
-  return new Date(date.getFullYear(), date.getMonth(), date.nowDay + (6 - date.nowDayOfWeek + 1));
+  const nowDayOfWeek = date.getDay() == 0 ? 7 : date.getDay(); //今天是本周的第几天
+  return new Date(date.getFullYear(), date.getMonth(), date.nowDay + (6 - nowDayOfWeek + 1));
 }
 
 //获取本月的开始日期
@@ -85,19 +87,20 @@ const getMonthStartDate = date => {
   return new Date(date.getFullYear(), date.getMonth(), 1);
 }
 
-// //获取本月的结束日期
-// const getMonthEndDate = date => {
-//   return new Date(date.getFullYear(), date.getMonth(), date.getMonthDays(date.getMonth()));
-// }
+//获取本月的结束日期
+const getMonthEndDate = date => {
+  const day = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+  return new Date(date.getFullYear(), date.getMonth(), day);
+}
 
 
 //获取本年的开始日期
-const getMonthStartDate = date => {
+const getYearStartDate = date => {
   return new Date(date.getFullYear(), 0, 1);
 }
 
 //获取本年的结束日期
-const getMonthEndDate = date => {
+const getYearEndDate = date => {
   return new Date(date.getFullYear(), 11, 31);
 }
 
@@ -116,7 +119,7 @@ module.exports = {
   getWeekEndformatDate: getWeekEndformatDate,
   getMonthStartDate: getMonthStartDate,
   getMonthEndDate: getMonthEndDate,
-
-
+  getYearStartDate: getYearStartDate,
+  getYearEndDate: getYearEndDate
 
 }

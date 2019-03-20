@@ -80,9 +80,8 @@ Page({
     console.log(this.data.year)
     console.log(this.data.month)
     console.log(this.data.day)    
-    var now = new Date();
-  console.log("------------")
-    console.log(getMonthEndDate(now))
+     console.log("------------")
+    console.log(this.getMonthEndDate(now))
 
 
     // 页面渲染完成  
@@ -91,8 +90,8 @@ Page({
     this.paintCanvas('canvasArc3', 213, 365, x, y, radius)
   },
 
-  getMonthEndDate (date) {
-    return new Date(date.nowYear, date.nowMonth, date.getMonthDays(date.nowMonth));
+  getMonthEndDate(date) {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
   },
 
   //删除习惯
