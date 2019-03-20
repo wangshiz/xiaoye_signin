@@ -7,13 +7,12 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-
   try {
     return await db.collection('busi_sign_in').add({
       data: {
         openid: wxContext.OPENID,
         name: event.name,
-        begin_date: db.serverDate(),
+        begin_date: new Date(event.nowDate),
         cont_count: 0,
         day_count: 0,
         last_sign_date: null 

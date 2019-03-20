@@ -201,7 +201,9 @@ Page({
         if (res.result.data != null) {
           var arr = res.result.data;
           for (var i = 0; i < arr.length; ++i) {
+            console.log(arr[i].begin_date)
             var beginDate = new Date(arr[i].begin_date);
+            console.log(beginDate)
             var date = util.formatDate(beginDate);
             arr[i].begin_date = date;
             if (arr[i].last_sign_date != null){
@@ -272,9 +274,14 @@ Page({
     wx.showLoading({
       title: '添加中',
     })
+    var nowDate = new Date().getTime()
+    console.log(nowDate)
     wx.cloud.callFunction({
       name: 'insert',
-      data: {name: name},
+      data: {
+        name: name,
+        nowDate: nowDate
+      },
       success: res => {
         console.log('[云函数] [login] user openid: ', res.result._id)
         if (res.result._id != null && res.result._id != "") {

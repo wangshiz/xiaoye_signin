@@ -76,10 +76,23 @@ Page({
       , y = (pageWidth / 750) * 80
       , radius = (pageWidth / 750) * 60
 
+    console.log(this.data.id)
+    console.log(this.data.year)
+    console.log(this.data.month)
+    console.log(this.data.day)    
+    var now = new Date();
+  console.log("------------")
+    console.log(getMonthEndDate(now))
+
+
     // 页面渲染完成  
     this.paintCanvas('canvasArc1', 6, 7, x, y, radius)
     this.paintCanvas('canvasArc2', 22, 31, x, y, radius)
     this.paintCanvas('canvasArc3', 213, 365, x, y, radius)
+  },
+
+  getMonthEndDate (date) {
+    return new Date(date.nowYear, date.nowMonth, date.getMonthDays(date.nowMonth));
   },
 
   //删除习惯
@@ -196,16 +209,18 @@ Page({
       title: '加载中',
     })
     var signid = this.data.id;
-    var lastSignDate = this.data.lastSignDate == null ? null :    this.data.lastSignDate.getTime();
-    console.log(lastSignDate)
+    var lastSignDate = this.data.lastSignDate == null ? null : this.data.lastSignDate.getTime();
+    var nowDate = new Date().getTime();
     wx.cloud.callFunction({
       name: 'insertrecord',
       data: { 
         signid: signid,
-        lastSignDate: lastSignDate
+        lastSignDate: lastSignDate,
+        nowDate: nowDate
       },
       success: res => {
         this.onLoad({id: this.data.id});
+        this.onReady();
       },
       fail: err => {
         wx.showToast({
