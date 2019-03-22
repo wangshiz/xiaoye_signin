@@ -51,20 +51,20 @@
 <view class="sign-detail">
   <view class="sign-canvas">
       <canvas class="cir" canvas-id="canvasArc1"></canvas> 
-      <text class="cc">6/7</text> 
-      <text class="cr">本周完成数</text>
+      <text class="cc">{{nowWeekDateTotal}}</text> 
+      <text class="cr">{{nowWeekFinish}}</text>
   </view>
 
   <view class="sign-canvas">
       <canvas class="cir" canvas-id="canvasArc2"></canvas> 
-      <text class="cc">10/{{nowMonthDate}}</text> 
-      <text class="cr">本月完成数</text>
+      <text class="cc">{{nowMonthDateTotal}}</text> 
+      <text class="cr">{{nowMonthFinish}}</text>
   </view>
 
     <view class="sign-canvas">
       <canvas class="cir" canvas-id="canvasArc3"></canvas> 
-      <text class="cc">10/{{nowYearDate}}</text> 
-      <text class="cr">本年完成数</text>
+      <text class="cc">{{nowYearDateTotal}}</text> 
+      <text class="cr">{{nowYearFinish}}</text>
   </view>
  </view>
 

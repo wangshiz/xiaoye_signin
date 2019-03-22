@@ -28,28 +28,28 @@ Page({
   onLoad: function (options) {
     var date = new Date();
     var yearMonth = util.formatYearMonth(date)
-      , nowMonthDate = util.getNowMonthDate(date)
-      , nowYearDate = util.getNowYearDate(date)
       , month = this.formatMonth(date.getMonth() + 1)
       , year = date.getFullYear()
       , day = this.formatDay(date.getDate())
-      , today = `${year}-${month}-${day}`;
+      , today = `${year}-${month}-${day}`
+      , sizeArr = util.getXYRadius();
     let calendar = this.generateThreeMonths(year, month)
     console.log(options)
     this.setData({
-      id: options.id,
-      month: month,
+      id: options.id, //signid
+      month: month, 
       year: year,
       day: day,
       date: yearMonth,
       today: today,
-      beSelectDate: today,
-      calendar: calendar,
-      nowMonthDate: nowMonthDate,
-      nowYearDate: nowYearDate
+      beSelectDate: today, //当天
+      calendar: calendar, //日历
+      sizeArr: sizeArr //尺寸数组
     })
     console.log(this.data)
     this.fetchById()
+
+
   },
 
   onShow: function () {
@@ -65,51 +65,7 @@ Page({
   },
 
   onReady: function() {
-    var pageWidth, pageHeight = 0;
-    wx.getSystemInfo({
-      success(res) {
-        pageWidth = res.windowWidth;
-      }
-    })  
 
-    var x = (pageWidth /750) * 121.25
-      , y = (pageWidth / 750) * 80
-      , radius = (pageWidth / 750) * 60
-
-    console.log(this.data.id)
-    console.log(this.data.year)
-    console.log(this.data.month)
-    console.log(this.data.day)    
-    console.log("------------")
-    var now = new Date();
-    var arr = util.signDateArray(now) 
-    wx.cloud.callFunction({
-      name: 'statisticsData',
-      data: { 
-        arr: arr,
-        signid: this.data.id
-        },
-      success: res => {
-        console.log(res)
-      },
-      fail: err => {
-        wx.showToast({
-          title: '网络开了小差~',
-          icon: 'none',
-          duration: 2000
-        })
-      },
-      complete: err => {
-        wx.hideLoading();
-      }
-    })
-
-
-
-    // 页面渲染完成  
-    this.paintCanvas('canvasArc1', 6, 7, x, y, radius)
-    this.paintCanvas('canvasArc2', 22, 31, x, y, radius)
-    this.paintCanvas('canvasArc3', 213, 365, x, y, radius)
   },
 
 
@@ -133,26 +89,6 @@ Page({
   //新增一个打卡记录
   insertOneRecord(){
     this.insertOneSignInRecord();
-  },
-
-
-  paintCanvas(canvasId, signCount, dateCount, x, y, radius) {
-    var cxt_arc = wx.createCanvasContext(canvasId);//创建并返回绘图上下文context对象。 
-    cxt_arc.setLineWidth(6);
-    cxt_arc.setStrokeStyle('#d2d2d2');
-    cxt_arc.setLineCap('round')
-    cxt_arc.beginPath();//开始一个新的路径 
-    cxt_arc.arc(x, y, radius, 0, 2 * Math.PI, false);//设置一个原点(60,40)，半径为30的圆的路径到当前路径 
-    cxt_arc.stroke();//对当前路径进行描边 
-
-    cxt_arc.setLineWidth(6);
-    cxt_arc.setStrokeStyle('#1EB5A1');
-    cxt_arc.setLineCap('round')
-    cxt_arc.beginPath();//开始一个新的路径 
-    cxt_arc.arc(x, y, radius, -Math.PI * 1 / 2, 2 * (signCount / dateCount) * Math.PI - Math.PI * 1 / 2, false);
-    cxt_arc.stroke();//对当前路径进行描边 
-
-    cxt_arc.draw();
   },
 
   deleteOneSignIn(id){
@@ -185,12 +121,16 @@ Page({
       title: '加载中',
     })
     console.log(this.data)
+    var now = new Date();
+    var arr = util.signDateArray(now) 
     wx.cloud.callFunction({
       name: 'fetchbyid',
-      data: { signid: this.data.id },
+      data: { signid: this.data.id , arr: arr},
       success: res => {
-        if (res.result.data != null && res.result.data.length > 0) {
-          var sign = res.result.data[0];
+        console.log(res)
+        if (res.result != null) {
+          var sign = res.result.record.data[0];
+          console.log(sign)
           wx.setNavigationBarTitle({
             title: sign.name,
           })
@@ -202,12 +142,54 @@ Page({
             select = util.formatOtherDate(lastSignDate) == this.data.today;
           } 
 
+          var weekDataTotal = res.result.weekData.total
+            , monthDataTotal = res.result.monthData.total
+            , yearDataTotal = res.result.yearData.total
+            , x = this.data.sizeArr[0]
+            , y = this.data.sizeArr[1]
+            , radius = this.data.sizeArr[2]
+            , nowMonthDate = util.getNowMonthDate(now)
+            , nowYearDate = util.getNowYearDate(now)
+
+          var nowWeekDateTotal = weekDataTotal + "/" + 7
+            , nowMonthDateTotal = monthDataTotal + "/" + nowMonthDate
+            , nowYearDateTotal = yearDataTotal + "/" + nowYearDate;
+
+          this.paintCanvas('canvasArc1', weekDataTotal, 7, x, y, radius)
+          this.paintCanvas('canvasArc2', monthDataTotal, nowMonthDate, x, y, radius)
+          this.paintCanvas('canvasArc3', yearDataTotal, nowYearDate, x, y, radius)
+
           this.setData({
-            disabled:  select,
+            disabled: select,
             lastSignDate: lastSignDate,
-            disabledText: select ? "今日已打卡" : "完成今日打卡"
+            disabledText: select ? "今日已打卡" : "完成今日打卡",
+            nowWeekDateTotal: nowWeekDateTotal,
+            nowMonthDateTotal: nowMonthDateTotal,
+            nowYearDateTotal: nowYearDateTotal,
+            nowWeekFinish: "本周完成数",
+            nowMonthFinish: "本月完成数",
+            nowYearFinish: "全年完成数"
           })
         }
+        // if (res.result.data != null && res.result.data.length > 0) {
+        //   var sign = res.result.data[0];
+        //   wx.setNavigationBarTitle({
+        //     title: sign.name,
+        //   })
+        //   console.log(sign.last_sign_date) 
+        //   var select = false;
+        //   var lastSignDate = null;
+        //   if (sign.last_sign_date != null) {
+        //     lastSignDate = new Date(sign.last_sign_date);
+        //     select = util.formatOtherDate(lastSignDate) == this.data.today;
+        //   } 
+
+        //   this.setData({
+        //     disabled:  select,
+        //     lastSignDate: lastSignDate,
+        //     disabledText: select ? "今日已打卡" : "完成今日打卡"
+        //   })
+        // }
       },
       fail: err => {
         wx.showToast({
@@ -227,7 +209,7 @@ Page({
       title: '加载中',
     })
     var signid = this.data.id;
-    var lastSignDate = this.data.lastSignDate == null ? null : this.data.lastSignDate.getTime();
+    var lastSignDate = this.data.lastSignDate == null ? null :  this.data.lastSignDate.getTime();
     var nowDate = new Date().getTime();
     wx.cloud.callFunction({
       name: 'insertrecord',
@@ -238,7 +220,6 @@ Page({
       },
       success: res => {
         this.onLoad({id: this.data.id});
-        this.onReady();
       },
       fail: err => {
         wx.showToast({
@@ -253,7 +234,25 @@ Page({
     })
   },
 
+  //画布方法
+  paintCanvas(canvasId, signCount, dateCount, x, y, radius) {
+    var cxt_arc = wx.createCanvasContext(canvasId);//创建并返回绘图上下文context对象。 
+    cxt_arc.setLineWidth(6);
+    cxt_arc.setStrokeStyle('#d2d2d2');
+    cxt_arc.setLineCap('round')
+    cxt_arc.beginPath();//开始一个新的路径 
+    cxt_arc.arc(x, y, radius, 0, 2 * Math.PI, false);//设置一个原点(60,40)，半径为30的圆的路径到当前路径 
+    cxt_arc.stroke();//对当前路径进行描边 
 
+    cxt_arc.setLineWidth(6);
+    cxt_arc.setStrokeStyle('#1EB5A1');
+    cxt_arc.setLineCap('round')
+    cxt_arc.beginPath();//开始一个新的路径 
+    cxt_arc.arc(x, y, radius, -Math.PI * 1 / 2, 2 * (signCount / dateCount) * Math.PI - Math.PI * 1 / 2, false);
+    cxt_arc.stroke();//对当前路径进行描边 
+
+    cxt_arc.draw();
+  },
 
 
 

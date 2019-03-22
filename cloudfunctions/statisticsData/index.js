@@ -13,7 +13,6 @@ exports.main = async (event, context) => {
     const weekData = await db.collection('busi_sign_in_record').where({
       signid: event.signid,
       date_time_stamp: _.gte(arr[0].startDate).and(_.lt(arr[0].endDate))
-
     }).count()
 
     const monthData = await db.collection('busi_sign_in_record').where({

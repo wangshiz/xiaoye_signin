@@ -4,6 +4,6 @@
     <image src="{{avatarUrl}}" class="userinfo-image"></image>
   </view>
   <button open-type="getUserInfo" 
-      bindgetuserinfo="onGetUserInfo" class="userinfotext" type="primary" style="display: {{buttonDisplay}};">点击此处完成用户授权      </button>
+      bindgetuserinfo="onGetUserInfo" class="userinfotext" type="primary" style="display: {{buttonDisplay}};">一个简易的养成习惯工具</button>
   <view class="successed" style="display: {{viewDisplay}};">(你已通过验证，{{num}}秒后跳转到主页)</view>
 </view>

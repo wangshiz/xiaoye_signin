@@ -87,6 +87,22 @@ const signDateArray = date => {
   return arr;
 }
 
+const getXYRadius = () => {
+  var pageWidth = 0
+    , pageHeight = 0;
+  wx.getSystemInfo({
+    success(res) {
+      pageWidth = res.windowWidth;
+    }
+  })  
+
+  var x = (pageWidth / 750) * 121.25
+  , y = (pageWidth / 750) * 80
+  , radius = (pageWidth / 750) * 60
+
+  return [x, y, radius];
+}
+
 
 module.exports = {
   formatTime: formatTime,
@@ -98,5 +114,6 @@ module.exports = {
   getNowMonthDate: getNowMonthDate,
   getNowYearDate: getNowYearDate,
   formatOtherDate: formatOtherDate,
-  signDateArray: signDateArray
+  signDateArray: signDateArray,
+  getXYRadius: getXYRadius
 }
