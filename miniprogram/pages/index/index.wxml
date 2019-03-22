@@ -11,7 +11,7 @@
       <view class="sign-date">{{item.begin_date}}</view>
       <view class="sign-day-count">已坚持<text class="day-item">{{item.day_count}}</text>天</view>
       <view class="sign-cont-count">持续签到<text class="day-item">{{item.cont_count}}</text>天</view>
-      <view wx:if='{{item.last_sign_date == nowDay}}' class='sign-minus'><image src="{{minusIcon}}"></image></view>
+      <view wx:if='{{item.last_sign_date == nowDay}}' class='sign-minus'><icon type="success_no_circle" size="20" color='#1EB5A1'/></view>
       <!-- <view class='sign-minus' catchtap='signDelete' data-id='{{item._id}}'>点击放弃</view> -->
     </view>
     <view wx:if='{{signInData.length == dateCount}}' class='sign-remind'>(至多添加{{dateCount}}条)</view>

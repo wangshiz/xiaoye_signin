@@ -238,9 +238,6 @@ Page({
                 signHeight: signHeight
               })
             }).exec();
-          }
-
-          if (scenes == "flash"){
             wx.stopPullDownRefresh();
           }
 

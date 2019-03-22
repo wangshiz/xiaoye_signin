@@ -171,25 +171,6 @@ Page({
             nowYearFinish: "全年完成数"
           })
         }
-        // if (res.result.data != null && res.result.data.length > 0) {
-        //   var sign = res.result.data[0];
-        //   wx.setNavigationBarTitle({
-        //     title: sign.name,
-        //   })
-        //   console.log(sign.last_sign_date) 
-        //   var select = false;
-        //   var lastSignDate = null;
-        //   if (sign.last_sign_date != null) {
-        //     lastSignDate = new Date(sign.last_sign_date);
-        //     select = util.formatOtherDate(lastSignDate) == this.data.today;
-        //   } 
-
-        //   this.setData({
-        //     disabled:  select,
-        //     lastSignDate: lastSignDate,
-        //     disabledText: select ? "今日已打卡" : "完成今日打卡"
-        //   })
-        // }
       },
       fail: err => {
         wx.showToast({
@@ -245,6 +226,7 @@ Page({
     cxt_arc.stroke();//对当前路径进行描边 
 
     cxt_arc.setLineWidth(6);
+    //cxt_arc.setStrokeStyle('#5DAC81');
     cxt_arc.setStrokeStyle('#1EB5A1');
     cxt_arc.setLineCap('round')
     cxt_arc.beginPath();//开始一个新的路径 
