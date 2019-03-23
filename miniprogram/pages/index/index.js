@@ -17,7 +17,7 @@ Page({
     showFormStatus: false,
     signAddDisplay: false,
     openid: null,
-    minusIcon: '../../images/ok.png'
+    isFlash: false
   },
 
   //打开form表单
@@ -65,6 +65,7 @@ Page({
 
     //查询
     // this.getMySignData("onLoad");
+    this.getMySignData("onLoad");
   },
 
   onShow: function() {
@@ -78,12 +79,18 @@ Page({
       },
     });
     //查询
-    this.getMySignData("onLoad");
+    var pages = getCurrentPages();
+    var currPage = pages[pages.length - 1]; //当前页面
+    if (this.data.isFlash) {
+      this.getMySignData("onLoad");
+      this.setData({
+        isFlash: false
+      })
+    }
   },
 
   onPullDownRefresh: function () {
     this.onLoad();
-    this.onShow();
   },
 
   onPageScroll: function (e) {

@@ -22,7 +22,8 @@ Page({
     swiperIndex: 1,
     showCaldenlar: false,
     disabled: true,
-    disabledText: ""
+    disabledText: "",
+    isFlash: false  //初始化为false
   },
 
   onLoad: function (options) {
@@ -201,6 +202,9 @@ Page({
       },
       success: res => {
         this.onLoad({id: this.data.id});
+        this.setData({
+          isFlash: true
+        })
       },
       fail: err => {
         wx.showToast({
@@ -237,7 +241,17 @@ Page({
   },
 
 
-
+  onUnload: function () {
+    console.log(123)
+    var pages = getCurrentPages();
+    var prevPage = pages[pages.length - 2]; 
+    prevPage.setData({
+      isFlash: this.data.isFlash
+    })
+    wx.navigateBack({
+      delta: 1
+    })
+  },
 
 
 
@@ -454,7 +468,13 @@ Page({
       , lastNum = this.getNumOfDays(lastMonthYear, lastMonth) //上月天数
     let startWeek = this.getWeekOfDate(year, month - 1, 1) //本月1号是周几
       , days = []
-    if (startWeek == 7) {
+    console.log("year" + year)
+    console.log("month" + month)    
+    console.log("lastMonth" + lastMonth)
+    console.log("lastMonthYear" + lastMonthYear)
+    console.log("lastNum" + lastNum)
+    console.log("startWeek" + startWeek)
+    if (startWeek == 6) {
       return days
     }
 
@@ -498,7 +518,7 @@ Page({
       , thisMonth = this.currentMonthDays(year, month)
       , nextMonth = this.nextMonthDays(year, month)
 
-      , days = [].concat([null,null,null,null,null], thisMonth, nextMonth)
+      , days = [].concat(lastMonth, thisMonth, nextMonth)
 
     console.log(lastMonth)
     console.log(thisMonth)
