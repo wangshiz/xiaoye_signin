@@ -64,7 +64,7 @@ Page({
     })
 
     //查询
-    this.getMySignData("onLoad");
+    // this.getMySignData("onLoad");
   },
 
   onShow: function() {
@@ -77,10 +77,13 @@ Page({
         });
       },
     });
+    //查询
+    this.getMySignData("onLoad");
   },
 
   onPullDownRefresh: function () {
     this.onLoad();
+    this.onShow();
   },
 
   onPageScroll: function (e) {

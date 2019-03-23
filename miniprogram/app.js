@@ -8,7 +8,6 @@ App({
       wx.cloud.init({
         env: 'windertest-24bc91',
         traceUser: true,
-
       })
     }
 

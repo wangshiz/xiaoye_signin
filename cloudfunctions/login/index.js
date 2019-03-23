@@ -1,6 +1,7 @@
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+//cloud.init({ env: 'winder-b47b5d'})
+cloud.init({ env: 'windertest-24bc91' })
 
 exports.main = (event, context) => {
 
