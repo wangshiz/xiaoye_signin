@@ -88,9 +88,14 @@
    color: #E6FFFD;
 }
 
+.weekday {
+  width: 100%;
+  height: 60rpx;
+}
+
 .weekday-box {
   width: 14.28%;
-  height: 50rpx;
+  height: 60rpx;
   float: left;
   text-align:center;
   line-height: 70rpx;

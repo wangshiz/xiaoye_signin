@@ -6,7 +6,6 @@ Page({
 
   data: {
     id: null,
-    openId: null,
     day: '',
     month: '',
     date: '',
@@ -34,10 +33,11 @@ Page({
       , day = this.formatDay(date.getDate())
       , today = `${year}-${month}-${day}`
       , sizeArr = util.getXYRadius();
-    let calendar = this.generateThreeMonths(year, month)
-    console.log(options)
     this.setData({
       id: options.id, //signid
+    })
+    let calendar = this.generateThreeMonths(year, month)
+    this.setData({
       month: month, 
       year: year,
       day: day,
@@ -47,7 +47,7 @@ Page({
       calendar: calendar, //日历
       sizeArr: sizeArr //尺寸数组
     })
-    console.log(this.data)
+    
     this.fetchById()
 
 
@@ -344,29 +344,6 @@ Page({
     return calendar
   },
 
-
-  //点击某日期
-  bindDayTap(e) {
-    console.log(e)
-    let { month, year } = this.data
-      , time = this.countMonth(year, month)
-      , tapMon = e.currentTarget.dataset.month
-      , day = e.currentTarget.dataset.day
-    if (tapMon == time.lastMonth.month) {
-      this.changeDate(time.lastMonth.year, time.lastMonth.month)
-    } else if (tapMon == time.nextMonth.month) {
-      this.changeDate(time.nextMonth.year, time.nextMonth.month)
-    } else {
-      this.setData({
-        day
-      })
-    }
-    let beSelectDate = e.currentTarget.dataset.date;
-    this.setData({
-      beSelectDate,
-      showCaldenlar: false
-    })
-  },
   bindDateChange(e) {
     if (e.detail.value === this.data.date) {
       return
@@ -380,16 +357,11 @@ Page({
   prevMonth(e) {
     let { year, month } = this.data
       , time = this.countMonth(year, month)
-    console.log(time.lastMonth.year)
-    console.log(time.lastMonth.month)
-    console.log(this.data.swiperIndex)
     this.changeDate(time.lastMonth.year, time.lastMonth.month)
-    console.log(this.data.swiperIndex)
   },
   nextMonth(e) {
     let { year, month } = this.data
       , time = this.countMonth(year, month)
-    console.log(this.data.swiperIndex)
     var changeIndex = this.data.swiperIndex == 3 ? 0 : this.data.swiperIndex + 1;
 
     this.changeDate(time.nextMonth.year, time.nextMonth.month)
@@ -468,19 +440,10 @@ Page({
       , lastNum = this.getNumOfDays(lastMonthYear, lastMonth) //上月天数
     let startWeek = this.getWeekOfDate(year, month - 1, 1) //本月1号是周几
       , days = []
-    console.log("year" + year)
-    console.log("month" + month)    
-    console.log("lastMonth" + lastMonth)
-    console.log("lastMonthYear" + lastMonthYear)
-    console.log("lastNum" + lastNum)
-    console.log("startWeek" + startWeek)
     if (startWeek == 6) {
       return days
     }
-
-    const startDay = lastNum - startWeek
-
-    return this.generateDays(lastMonthYear, lastMonth, lastNum, { startNum: startDay, notCurrent: true })
+    return new Array(startWeek+1).fill(null)
   },
 	/**
 	 * 生成下个月应显示天
@@ -499,12 +462,9 @@ Page({
       , daysNum = 0
     if (endWeek == 6) {
       return days
-    } else if (endWeek == 7) {
-      daysNum = 6
-    } else {
-      daysNum = 6 - endWeek
     }
-    return this.generateDays(nextMonthYear, nextMonth, daysNum, { startNum: 1, notCurrent: true })
+
+    return new Array(6 - endWeek).fill(null)
   },
 	/**
 	 * 
@@ -520,9 +480,7 @@ Page({
 
       , days = [].concat(lastMonth, thisMonth, nextMonth)
 
-    console.log(lastMonth)
     console.log(thisMonth)
-    console.log(nextMonth)
 
     return days
   },
@@ -538,27 +496,59 @@ Page({
 	 * 	}] 
 	 * @returns Array 日期对象数组
 	 */
-  // 疑似云开发处理部位
-  generateDays(year, month, daysNum, option = {
+   generateDays(year, month, daysNum, option = {
     startNum: 1,
     notCurrent: false
   }) {
-    const weekMap = ['一', '二', '三', '四', '五', '六', '日']
-    let days = []
-    for (let i = option.startNum; i <= daysNum; i++) {
-      let week = weekMap[new Date(year, month - 1, i).getUTCDay()]
-      let day = this.formatDay(i)
-      days.push({
-        date: `${year}-${month}-${day}`,
-        //切入字段
-        event: false,
-        day,
-        week,
-        month,
-        year
-      })
-    }
-    return days
+     let days = [];
+     const weekMap = ['一', '二', '三', '四', '五', '六', '日']
+     var a =  this.getData(year, month)
+     console.log(a)
+     for (let i = option.startNum; i <= daysNum; i++) {
+       let week = weekMap[new Date(year, month - 1, i).getUTCDay()]
+       let day = this.formatDay(i)
+       let event = false
+       days.push({
+         date: `${year}-${month}-${day}`,
+         //切入字段
+         event: event,
+         day,
+         week,
+         month,
+         year
+       })
+     }
+
+     return days
+
+  },
+
+
+  getData(year, month){
+    var startTime = new Date(year, month - 1, 1).getTime()
+      , endTime = new Date(year, month, 1).getTime();
+    wx.cloud.callFunction({
+      name: 'statisticsData',
+      async: true,
+      data: {
+        signid: this.data.id,
+        startTime: startTime,
+        endTime: endTime
+      },
+      success: res => {
+
+        return res
+
+        
+      },
+      fail: err => {
+        wx.showToast({
+          title: '网络开了小差~',
+          icon: 'none',
+          duration: 2000
+        })
+      },
+    });
   },
 	/**
 	 * 
