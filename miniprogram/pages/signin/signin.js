@@ -341,6 +341,8 @@ Page({
     calendar[thisKey] = this.generateAllDays(time.thisMonth.year, time.thisMonth.month)
     delete calendar[nextKey]
     calendar[nextKey] = this.generateAllDays(time.nextMonth.year, time.nextMonth.month)
+    console.log(123)
+    console.log(calendar)
     return calendar
   },
 
