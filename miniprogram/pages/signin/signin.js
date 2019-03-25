@@ -167,9 +167,7 @@ Page({
             nowWeekDateTotal: nowWeekDateTotal,
             nowMonthDateTotal: nowMonthDateTotal,
             nowYearDateTotal: nowYearDateTotal,
-            nowWeekFinish: "本周完成数",
-            nowMonthFinish: "本月完成数",
-            nowYearFinish: "全年完成数"
+            nowFinish: ["本周完成数", "本月完成数", "全年完成数"],
           })
         }
       },
@@ -426,7 +424,10 @@ Page({
   },
   currentMonthDays(year, month) {
     const numOfDays = this.getNumOfDays(year, month)
-    return this.generateDays(year, month, numOfDays)
+    var a = this.generateDays(year, month, numOfDays)
+    console.log(a)
+    return a
+    //return this.generateDays(year, month, numOfDays)
   },
 	/**
 	 * 生成上个月应显示的天
@@ -504,54 +505,102 @@ Page({
   }) {
      let days = [];
      const weekMap = ['一', '二', '三', '四', '五', '六', '日']
-     var a =  this.getData(year, month)
-     console.log(a)
-     for (let i = option.startNum; i <= daysNum; i++) {
-       let week = weekMap[new Date(year, month - 1, i).getUTCDay()]
-       let day = this.formatDay(i)
-       let event = false
-       days.push({
-         date: `${year}-${month}-${day}`,
-         //切入字段
-         event: event,
-         day,
-         week,
-         month,
-         year
-       })
-     }
+     //this.getData(year, month)
+     this.getData(year, month).then((data) => {
+       console.log(12345)
+       console.log(data)
+       for (let i = option.startNum; i <= daysNum; i++) {
+         let week = weekMap[new Date(year, month - 1, i).getUTCDay()]
+         let day = this.formatDay(i)
+         let event = false
+         days.push({
+           date: `${year}-${month}-${day}`,
+           //切入字段
+           event: event,
+           day,
+           week,
+           month,
+           year
+         })
+       }
+       console.log(days)
+       return days
+     })
+     
 
-     return days
 
   },
 
 
-  getData(year, month){
-    var startTime = new Date(year, month - 1, 1).getTime()
-      , endTime = new Date(year, month, 1).getTime();
-    wx.cloud.callFunction({
-      name: 'statisticsData',
-      async: true,
-      data: {
-        signid: this.data.id,
-        startTime: startTime,
-        endTime: endTime
-      },
-      success: res => {
+  // getData(year, month){
+  //   var startTime = new Date(year, month - 1, 1).getTime()
+  //     , endTime = new Date(year, month, 1).getTime();
+  //   wx.cloud.callFunction({
+  //     name: 'statisticsData',
+  //     async: true,
+  //     data: {
+  //       signid: this.data.id,
+  //       startTime: startTime,
+  //       endTime: endTime
+  //     },
+  //     success: res => {
 
-        return res
+  //       return res
 
         
+  //     },
+  //     fail: err => {
+  //       wx.showToast({
+  //         title: '网络开了小差~',
+  //         icon: 'none',
+  //         duration: 2000
+  //       })
+  //     },
+  //   });
+  // },
+  getData(year, month) {
+    var promise = new Promise((resolve, reject) => {
+      var startTime = new Date(year, month - 1, 1).getTime()
+        , endTime = new Date(year, month, 1).getTime()
+        , that = this;
+      wx.cloud.callFunction({
+        name: 'statisticsData',
+        data: {
+          signid: that.data.id,
+          startTime: startTime,
+          endTime: endTime
+        },
+      success: res => {
+        console.log(res)
+        resolve(res.result.data)
       },
       fail: err => {
-        wx.showToast({
-          title: '网络开了小差~',
-          icon: 'none',
-          duration: 2000
-        })
+        console.log(err)
+        reject("查询数据库失败")
       },
+
+
     });
+      // var that = this;
+      // const db = wx.cloud.database();
+      // db.collection(coll_name).where(search_cond).get({
+      //   success: function (res) {
+      //     console.log("in promise info:", res.data)
+      //     resolve(res.data)
+      //   },
+      //   error: function (e) {
+      //     console.log(e)
+      //     reject("查询数据库失败")
+      //   }
+      // });
+    });
+
+    return promise
   },
+
+
+
+
 	/**
 	 * 
 	 * 获取指定月第n天是周几		|

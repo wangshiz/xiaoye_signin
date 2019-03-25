@@ -54,19 +54,19 @@
   <view class="sign-canvas">
       <canvas class="cir" canvas-id="canvasArc1"></canvas> 
       <text class="cc">{{nowWeekDateTotal}}</text> 
-      <text class="cr">{{nowWeekFinish}}</text>
+      <text class="cr">{{nowFinish[0]}}</text>
   </view>
 
   <view class="sign-canvas">
       <canvas class="cir" canvas-id="canvasArc2"></canvas> 
       <text class="cc">{{nowMonthDateTotal}}</text> 
-      <text class="cr">{{nowMonthFinish}}</text>
+      <text class="cr">{{nowFinish[1]}}</text>
   </view>
 
     <view class="sign-canvas">
       <canvas class="cir" canvas-id="canvasArc3"></canvas> 
       <text class="cc">{{nowYearDateTotal}}</text> 
-      <text class="cr">{{nowYearFinish}}</text>
+      <text class="cr">{{nowFinish[2]}}</text>
   </view>
  </view>
 
