@@ -372,22 +372,22 @@ Page({
 	 * @param {any} year 
 	 * @param {any} month 
 	 */
-  changeDate(year, month) {
-    let { day, today } = this.data
-      , calendar = this.generateThreeMonths(year, month)
-      , date = `${year}-${month}`
-    date.indexOf(today) === -1
-      ? day = '01'
-      : day = today.slice(-2)
+  // changeDate(year, month) {
+  //   let { day, today } = this.data
+  //     , calendar = this.generateThreeMonths(year, month)
+  //     , date = `${year}-${month}`
+  //   date.indexOf(today) === -1
+  //     ? day = '01'
+  //     : day = today.slice(-2)
 
-    this.setData({
-      calendar,
-      day,
-      date,
-      month,
-      year,
-    })
-  },
+  //   this.setData({
+  //     calendar,
+  //     day,
+  //     date,
+  //     month,
+  //     year,
+  //   })
+  // },
 	/**
 	 * 
 	 * 月份处理
@@ -422,12 +422,18 @@ Page({
       nextMonth
     }
   },
+
+  
   currentMonthDays(year, month) {
-    const numOfDays = this.getNumOfDays(year, month)
-    var a = this.generateDays(year, month, numOfDays)
-    console.log(a)
-    return a
-    //return this.generateDays(year, month, numOfDays)
+    var promise = new Promise((resolve, reject) => {
+      const numOfDays = this.getNumOfDays(year, month)
+      this.generateDays(year, month, numOfDays).then((data) => {
+        console.log(123)
+        console.log(data)
+        resolve(data)
+      })
+    });
+    return promise;
   },
 	/**
 	 * 生成上个月应显示的天
@@ -477,15 +483,20 @@ Page({
 	 * @returns Array
 	 */
   generateAllDays(year, month) {
-    let lastMonth = this.lastMonthDays(year, month)
-      , thisMonth = this.currentMonthDays(year, month)
-      , nextMonth = this.nextMonthDays(year, month)
-
-      , days = [].concat(lastMonth, thisMonth, nextMonth)
-
-    console.log(thisMonth)
-
-    return days
+    var promise = new Promise((resolve, reject) => {
+      let lastMonth = this.lastMonthDays(year, month)
+        , nextMonth = this.nextMonthDays(year, month)
+        , thisMonth;
+      this.currentMonthDays(year, month).then((data) => {
+        thisMonth = data;
+        let days = [].concat(lastMonth, thisMonth, nextMonth)
+        console.log(132)
+        console.log(days)
+        resolve(days)
+      })
+    })
+    
+    return promise
   },
 	/**
 	 * 
@@ -503,32 +514,35 @@ Page({
     startNum: 1,
     notCurrent: false
   }) {
-     let days = [];
-     const weekMap = ['一', '二', '三', '四', '五', '六', '日']
-     //this.getData(year, month)
-     this.getData(year, month).then((data) => {
-       console.log(12345)
-       console.log(data)
-       for (let i = option.startNum; i <= daysNum; i++) {
-         let week = weekMap[new Date(year, month - 1, i).getUTCDay()]
-         let day = this.formatDay(i)
-         let event = false
-         days.push({
-           date: `${year}-${month}-${day}`,
-           //切入字段
-           event: event,
-           day,
-           week,
-           month,
-           year
-         })
-       }
-       console.log(days)
-       return days
+     var promise = new Promise((resolve, reject) => {
+       let days = [];
+       const weekMap = ['一', '二', '三', '四', '五', '六', '日']
+       //this.getData(year, month)
+       this.getData(year, month).then((data) => {
+         for (let i = option.startNum; i <= daysNum; i++) {
+           let event = false
+           let day = this.formatDay(i)
+           let week = weekMap[new Date(year, month - 1, i).getUTCDay()]
+           for (let j = 0; j < data.length; j++) {
+             if (data[j].day == day) {
+               event = true
+               break
+             }
+           }
+           days.push({
+             date: `${year}-${month}-${day}`,
+             //切入字段
+             event: event,
+             day,
+             week,
+             month,
+             year
+           })
+         }
+         resolve(days)
+       })
      })
-     
-
-
+     return promise;
   },
 
 
