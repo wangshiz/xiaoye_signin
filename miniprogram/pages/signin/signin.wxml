@@ -22,8 +22,8 @@
 
     <swiper-item class='flex m-around days-table '>
       <view wx:for="{{calendar.second}}" wx:for-item='x' wx:key='x.date'
-        class='grid  {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}}' data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' data-test='{{(year + "-" +month + "-" + day)}}'  >
-        <!-- <view>{{x.date === today?'今天':x.day}}</view> -->
+        class='grid  {{x.event == true ? "choice":""}}' data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' data-test='{{(year + "-" +month + "-" + day)}}'  >
+        <!-- <view>{{x.date === today?'今':x.day}}</view> -->
         <view>{{x.day}}</view>
       </view>
     </swiper-item>
