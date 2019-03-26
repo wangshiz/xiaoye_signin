@@ -80,8 +80,30 @@ Page({
     console.log(this.data.year)
     console.log(this.data.month)
     console.log(this.data.day)    
-     console.log("------------")
-    console.log(this.getMonthEndDate(now))
+    console.log("------------")
+    var now = new Date();
+    var arr = util.signDateArray(now) 
+    wx.cloud.callFunction({
+      name: 'statisticsData',
+      data: { 
+        arr: arr,
+        signid: this.data.id
+        },
+      success: res => {
+        console.log(res)
+      },
+      fail: err => {
+        wx.showToast({
+          title: '网络开了小差~',
+          icon: 'none',
+          duration: 2000
+        })
+      },
+      complete: err => {
+        wx.hideLoading();
+      }
+    })
+
 
 
     // 页面渲染完成  
@@ -90,9 +112,6 @@ Page({
     this.paintCanvas('canvasArc3', 213, 365, x, y, radius)
   },
 
-  getMonthEndDate(date) {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-  },
 
   //删除习惯
   signDelete(e) {

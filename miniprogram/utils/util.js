@@ -70,38 +70,21 @@ const getNowYearDate = date => {
   return parseInt((end_date.getTime() - start_date.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-//获取本周的开始日期
-const getWeekStartDate = date => {
-  const nowDayOfWeek = date.getDay() == 0 ? 7 : date.getDay(); //今天是本周的第几天
-  return new Date(date.getFullYear(), date.getMonth(), date.nowDay - nowDayOfWeek + 1);
-}
+// 获取数据
+const signDateArray = date => {
+  var arr = new Array();
+  var nowDayOfWeek = date.getDay() == 0 ? 7 : date.getDay(); //今天是本周的第几天
+  var getWeekStartDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - nowDayOfWeek + 1).getTime()
+    , getWeekEndDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 8 - nowDayOfWeek).getTime()
+    , getMonthStartDate = new Date(date.getFullYear(), date.getMonth(), 1).getTime()
+    , getMonthEndDate = new Date(date.getFullYear(), date.getMonth() + 1, 1).getTime()
+    , getYearStartDate = new Date(date.getFullYear(), 0, 1).getTime()
+    , getYearEndDate = new Date(date.getFullYear() + 1, 0, 1).getTime();
+  arr.push({ "startDate": getWeekStartDate, "endDate": getWeekEndDate})
+  arr.push({ "startDate": getMonthStartDate, "endDate": getMonthEndDate })
+  arr.push({ "startDate": getYearStartDate, "endDate": getYearEndDate })
 
-//获取本周的结束日期
-const getWeekEndformatDate = date => {
-  const nowDayOfWeek = date.getDay() == 0 ? 7 : date.getDay(); //今天是本周的第几天
-  return new Date(date.getFullYear(), date.getMonth(), date.nowDay + (6 - nowDayOfWeek + 1));
-}
-
-//获取本月的开始日期
-const getMonthStartDate = date => {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
-//获取本月的结束日期
-const getMonthEndDate = date => {
-  const day = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-  return new Date(date.getFullYear(), date.getMonth(), day);
-}
-
-
-//获取本年的开始日期
-const getYearStartDate = date => {
-  return new Date(date.getFullYear(), 0, 1);
-}
-
-//获取本年的结束日期
-const getYearEndDate = date => {
-  return new Date(date.getFullYear(), 11, 31);
+  return arr;
 }
 
 
@@ -115,11 +98,5 @@ module.exports = {
   getNowMonthDate: getNowMonthDate,
   getNowYearDate: getNowYearDate,
   formatOtherDate: formatOtherDate,
-  getWeekStartDate: getWeekStartDate,
-  getWeekEndformatDate: getWeekEndformatDate,
-  getMonthStartDate: getMonthStartDate,
-  getMonthEndDate: getMonthEndDate,
-  getYearStartDate: getYearStartDate,
-  getYearEndDate: getYearEndDate
-
+  signDateArray: signDateArray
 }
