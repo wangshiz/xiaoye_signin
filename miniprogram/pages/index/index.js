@@ -202,6 +202,7 @@ Page({
     var that = this;
     wx.showLoading({
       title: '加载中',
+      mask: true
     })
     wx.cloud.callFunction({
       name: 'fetch',
@@ -280,6 +281,7 @@ Page({
   insertOneData(name){
     wx.showLoading({
       title: '添加中',
+      mask: true
     })
     var nowDate = new Date().getTime()
     console.log(nowDate)
