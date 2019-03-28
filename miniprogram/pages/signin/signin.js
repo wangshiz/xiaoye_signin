@@ -256,20 +256,7 @@ Page({
     prevPage.setData({
       isFlash: this.data.isFlash
     })
-    wx.navigateBack({
-      delta: 1
-    })
   },
-
-
-
-
-
-
-
-
-
-
 
 
   //日历处理方法
@@ -316,6 +303,10 @@ Page({
 
     time = this.countMonth(year, month)
     calendar[change] = null
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
     this.generateAllDays(time[key].year, time[key].month).then((data) => {
       console.log(8888888888)
       console.log(data)
@@ -329,6 +320,7 @@ Page({
         day,
         calendar
       })
+      wx.hideLoading()
     })
   },
 	/**
@@ -547,33 +539,6 @@ Page({
      return promise;
   },
 
-
-  // getData(year, month){
-  //   var startTime = new Date(year, month - 1, 1).getTime()
-  //     , endTime = new Date(year, month, 1).getTime();
-  //   wx.cloud.callFunction({
-  //     name: 'statisticsData',
-  //     async: true,
-  //     data: {
-  //       signid: this.data.id,
-  //       startTime: startTime,
-  //       endTime: endTime
-  //     },
-  //     success: res => {
-
-  //       return res
-
-        
-  //     },
-  //     fail: err => {
-  //       wx.showToast({
-  //         title: '网络开了小差~',
-  //         icon: 'none',
-  //         duration: 2000
-  //       })
-  //     },
-  //   });
-  // },
   getData(year, month) {
     var promise = new Promise((resolve, reject) => {
       var startTime = new Date(year, month - 1, 1).getTime()
@@ -586,31 +551,16 @@ Page({
           startTime: startTime,
           endTime: endTime
         },
-      success: res => {
-        console.log(res)
-        resolve(res.result.data)
-      },
-      fail: err => {
-        console.log(err)
-        reject("查询数据库失败")
-      },
-
-
+        success: res => {
+          console.log(res)
+          resolve(res.result.data)
+        },
+        fail: err => {
+          console.log(err)
+          reject("查询数据库失败")
+        },
+      });
     });
-      // var that = this;
-      // const db = wx.cloud.database();
-      // db.collection(coll_name).where(search_cond).get({
-      //   success: function (res) {
-      //     console.log("in promise info:", res.data)
-      //     resolve(res.data)
-      //   },
-      //   error: function (e) {
-      //     console.log(e)
-      //     reject("查询数据库失败")
-      //   }
-      // });
-    });
-
     return promise
   },
 
