@@ -1,8 +1,8 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-//cloud.init({ env: 'winder-b47b5d'})
-cloud.init({ env: 'windertest-24bc91' })
+cloud.init({ env: 'winder-b47b5d'})
+//cloud.init({ env: 'windertest-24bc91' })
 const db = cloud.database()
 const _ = db.command
 
