@@ -3,7 +3,6 @@ const util = require("../../utils/util.js")
 const db = wx.cloud.database()
 
 Page({
-
   data: {
     showSignStatus: false,
     showAuthorizationStatus: false,

@@ -1,4 +1,3 @@
-<!--ono/signin/signin.wxml-->
 <view class="containers">
   <view class="yearmonth">
     <view class="yearmonth_text">{{date}}</view>
@@ -10,7 +9,7 @@
       {{item}}
     </view>
   </view>
-  <swiper class='swpier-box' circular="true" current="{{swiperIndex}}" bindchange='swiperChange'>
+  <swiper class='swpier-box' circular="true" current="{{swiperIndex}}"  bindchange='swiperChange'>
     <swiper-item class='flex m-around days-table '>
       <view wx:for="{{calendar.first}}" wx:for-item='x' wx:key='x.date'
         class='grid {{x.event == true ? "choice":""}}' data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' >
@@ -38,11 +37,8 @@
         <view>{{x.day}}</view>
       </view>
     </swiper-item>
-
   </swiper>
   </view>
-
-
 </view>
 
 <view class="sign-detail">
@@ -65,7 +61,7 @@
   </view>
  </view>
 
-<swiper class="sign-add">
+<swiper class="sign-add" current="{{underSwiperIndex}}" circular="{{circular}}">
   <swiper-item>
     <button type="primary" catchtap='insertOneRecord' data-status='open' disabled='{{disabled}}' style='width: 66.66%;'>{{disabledText}}</button>
   </swiper-item>

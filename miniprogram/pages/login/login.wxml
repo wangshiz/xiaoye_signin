@@ -1,4 +1,3 @@
-<!--pages/login/login.wxml-->
 <view class='userinfo' wx:if="{{isScope}}">
   <view>
     <image src="{{avatarUrl}}" class="userinfo-image"></image>

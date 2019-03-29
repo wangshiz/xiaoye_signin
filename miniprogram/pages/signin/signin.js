@@ -20,6 +20,7 @@ Page({
     swiperMap: ['first', 'second', 'third', 'fourth'],
     swiperIndex: 1,
     showCaldenlar: false,
+    underSwiperIndex: 0,
     disabled: true,
     disabledText: "",
     isFlash: false  //初始化为false
@@ -54,6 +55,30 @@ Page({
         calendar: calendar, //日历
       })
       wx.hideLoading()
+      var that = this;
+      wx.getStorage({
+        key: "firstEnter",
+        success: function (res) {
+          return
+        },
+        fail: function (res) {
+          wx.setStorage({//存储到本地
+            key: "firstEnter",
+            data: 0
+          })
+          setTimeout(function () {
+            that.setData({
+              underSwiperIndex: 1
+            })
+          }, 1000)
+
+          setTimeout(function () {
+            that.setData({
+              underSwiperIndex: 0
+            })
+          }, 2500)
+        }
+      });
     })
     
   },
@@ -67,20 +92,6 @@ Page({
           openid: res.data
         });
       },
-    });
-    wx.getStorage({
-      key: "firstEnter",
-      success: function (res) {
-        console.log(res)
-        return
-      },
-      fail: function (res) {
-        wx.setStorage({//存储到本地
-          key: "firstEnter",
-          data: 0
-        })
-        console.log(res)
-      }
     });
   },
 

@@ -1,4 +1,3 @@
-//index.js
 const app = getApp()
 
 Page({
@@ -19,8 +18,10 @@ Page({
 
   onLoad: function () {
     if (!wx.cloud) {
-      wx.redirectTo({
-        url: '../error/error',
+      wx.showToast({
+        title: '网络似乎开了小差～',
+        icon: 'none',
+        duration: 2000
       })
       return
     }
@@ -28,9 +29,7 @@ Page({
   
     // 获取用户信息
     wx.getSetting({
-
       success: res => {
-
         if (res.authSetting['scope.userInfo']) {
            wx.redirectTo({
              url: '../index/index'
@@ -87,8 +86,10 @@ Page({
       },
       fail: err => {
         console.error('[云函数] [login] 调用失败', err)
-        wx.navigateTo({
-          url: '.../error/error',
+        wx.showToast({
+          title: '网络似乎开了小差～',
+          icon: 'none',
+          duration: 2000
         })
       }
     })
