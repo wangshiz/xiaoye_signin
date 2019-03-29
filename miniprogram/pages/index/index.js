@@ -208,13 +208,10 @@ Page({
       name: 'fetch',
       data: {},
       success: res => {
-        console.log(res.result.data)
         if (res.result.data != null) {
           var arr = res.result.data;
           for (var i = 0; i < arr.length; ++i) {
-            console.log(arr[i].begin_date)
             var beginDate = new Date(arr[i].begin_date);
-            console.log(beginDate)
             var date = util.formatDate(beginDate);
             arr[i].begin_date = date;
             if (arr[i].last_sign_date != null){
@@ -284,7 +281,6 @@ Page({
       mask: true
     })
     var nowDate = new Date().getTime()
-    console.log(nowDate)
     wx.cloud.callFunction({
       name: 'insert',
       data: {

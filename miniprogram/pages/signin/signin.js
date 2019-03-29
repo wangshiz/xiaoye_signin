@@ -49,10 +49,7 @@ Page({
       mask: true
     })
     this.generateThreeMonths(year, month).then((data) => {
-      console.log("----------------------------")
-      console.log(data)
       let calendar = data
-
       this.setData({
         calendar: calendar, //日历
       })
@@ -71,6 +68,20 @@ Page({
         });
       },
     });
+    wx.getStorage({
+      key: "firstEnter",
+      success: function (res) {
+        console.log(res)
+        return
+      },
+      fail: function (res) {
+        wx.setStorage({//存储到本地
+          key: "firstEnter",
+          data: 0
+        })
+        console.log(res)
+      }
+    });
   },
 
   onReady: function() {
@@ -88,8 +99,6 @@ Page({
       success(res) {
         if (res.confirm) {
           that.deleteOneSignIn(id)
-        } else if (res.cancel) {
-          console.log('用户点击取消')
         }
       }
     })
@@ -131,21 +140,17 @@ Page({
       title: '加载中',
       mask: true
     })
-    console.log(this.data)
     var now = new Date();
     var arr = util.signDateArray(now) 
     wx.cloud.callFunction({
       name: 'fetchbyid',
       data: { signid: this.data.id , arr: arr},
       success: res => {
-        console.log(res)
         if (res.result != null) {
           var sign = res.result.record.data[0];
-          console.log(sign)
           wx.setNavigationBarTitle({
             title: sign.name,
           })
-          console.log(sign.last_sign_date) 
           var select = false;
           var lastSignDate = null;
           if (sign.last_sign_date != null) {
@@ -189,7 +194,7 @@ Page({
         })
       },
       complete: err => {
-        //wx.hideLoading()
+
       }
     })
   },
@@ -223,7 +228,7 @@ Page({
         })
       },
       complete: err => {
-        //wx.hideLoading()
+        wx.hideLoading()
       }
     })
   },
@@ -256,20 +261,7 @@ Page({
     prevPage.setData({
       isFlash: this.data.isFlash
     })
-    wx.navigateBack({
-      delta: 1
-    })
   },
-
-
-
-
-
-
-
-
-
-
 
 
   //日历处理方法
@@ -316,9 +308,11 @@ Page({
 
     time = this.countMonth(year, month)
     calendar[change] = null
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
     this.generateAllDays(time[key].year, time[key].month).then((data) => {
-      console.log(8888888888)
-      console.log(data)
       calendar[change] = data
       this.setData({
         swiperIndex: currentIndex,
@@ -329,6 +323,7 @@ Page({
         day,
         calendar
       })
+      wx.hideLoading()
     })
   },
 	/**
@@ -349,22 +344,13 @@ Page({
       delete calendar[thisKey]
       delete calendar[nextKey]
       this.generateAllDays(time.lastMonth.year, time.lastMonth.month).then((data) => {
-        console.log(1111111111)
-        console.log(calendar)
         calendar[lastKey] = data
-        console.log(calendar)
         return this.generateAllDays(time.thisMonth.year, time.thisMonth.month)
       }).then((data) => {
-        console.log(111111111111)
-        console.log(calendar)
         calendar[thisKey] = data
-        console.log(calendar)
         return this.generateAllDays(time.nextMonth.year, time.nextMonth.month)
       }).then((data) => {
-        console.log(1111111111)
-        console.log(calendar)
         calendar[nextKey] = data
-        console.log(calendar)
         resolve(calendar)
       })
     })
@@ -433,7 +419,6 @@ Page({
     var promise = new Promise((resolve, reject) => {
       const numOfDays = this.getNumOfDays(year, month)
       this.generateDays(year, month, numOfDays).then((data) => {
-        console.log(data)
         resolve(data)
       })
     });
@@ -494,7 +479,6 @@ Page({
       this.currentMonthDays(year, month).then((data) => {
         thisMonth = data;
         let days = [].concat(lastMonth, thisMonth, nextMonth)
-        console.log(days)
         resolve(days)
       })
     })
@@ -547,33 +531,6 @@ Page({
      return promise;
   },
 
-
-  // getData(year, month){
-  //   var startTime = new Date(year, month - 1, 1).getTime()
-  //     , endTime = new Date(year, month, 1).getTime();
-  //   wx.cloud.callFunction({
-  //     name: 'statisticsData',
-  //     async: true,
-  //     data: {
-  //       signid: this.data.id,
-  //       startTime: startTime,
-  //       endTime: endTime
-  //     },
-  //     success: res => {
-
-  //       return res
-
-        
-  //     },
-  //     fail: err => {
-  //       wx.showToast({
-  //         title: '网络开了小差~',
-  //         icon: 'none',
-  //         duration: 2000
-  //       })
-  //     },
-  //   });
-  // },
   getData(year, month) {
     var promise = new Promise((resolve, reject) => {
       var startTime = new Date(year, month - 1, 1).getTime()
@@ -586,31 +543,14 @@ Page({
           startTime: startTime,
           endTime: endTime
         },
-      success: res => {
-        console.log(res)
-        resolve(res.result.data)
-      },
-      fail: err => {
-        console.log(err)
-        reject("查询数据库失败")
-      },
-
-
+        success: res => {
+          resolve(res.result.data)
+        },
+        fail: err => {
+          reject("查询数据库失败")
+        },
+      });
     });
-      // var that = this;
-      // const db = wx.cloud.database();
-      // db.collection(coll_name).where(search_cond).get({
-      //   success: function (res) {
-      //     console.log("in promise info:", res.data)
-      //     resolve(res.data)
-      //   },
-      //   error: function (e) {
-      //     console.log(e)
-      //     reject("查询数据库失败")
-      //   }
-      // });
-    });
-
     return promise
   },
 
