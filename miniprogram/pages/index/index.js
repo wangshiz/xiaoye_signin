@@ -55,15 +55,20 @@ Page({
 
   onLoad: function (options) {
     var that = this;
+    wx.getSystemInfo({
+      success(res) {
+        that.setData({
+          marginBottom: (res.windowWidth / 750) * 110
+        })
+      }
+    })  
     var date = new Date()
     this.setData({
       month: util.formatMonth(date),
       day: util.formatDay(date),
       nowDay: util.formatDate(date)
     })
-
     //查询
-    // this.getMySignData("onLoad");
     this.getMySignData("onLoad");
   },
 
@@ -78,8 +83,6 @@ Page({
       },
     });
     //查询
-    var pages = getCurrentPages();
-    var currPage = pages[pages.length - 1]; //当前页面
     if (this.data.isFlash) {
       this.getMySignData("onLoad");
       this.setData({
@@ -235,7 +238,7 @@ Page({
             })
             wx.createSelectorQuery().select('#sign').boundingClientRect(function (rect) {
               signHeight = rect.height;
-              if (signHeight + 55 <= windowHeight) {
+              if (signHeight + that.data.marginBottom <= windowHeight) {
                 that.buildAddAnimation("up")
               } else {
                 that.buildAddAnimation("down")
@@ -254,7 +257,7 @@ Page({
               that.setData({
                 signHeight: rect.height
               })  
-              if (rect.height + 55 > that.data.windowHeight) {
+              if (rect.height + that.data.marginBottom > that.data.windowHeight) {
                 that.buildAddAnimation("down")
               }
             }).exec();

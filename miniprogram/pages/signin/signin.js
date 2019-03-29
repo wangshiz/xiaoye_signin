@@ -514,7 +514,6 @@ Page({
      var promise = new Promise((resolve, reject) => {
        let days = [];
        const weekMap = ['一', '二', '三', '四', '五', '六', '日']
-       //this.getData(year, month)
        this.getData(year, month).then((data) => {
          for (let i = option.startNum; i <= daysNum; i++) {
            let event = false
