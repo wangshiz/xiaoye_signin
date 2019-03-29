@@ -76,7 +76,7 @@ Page({
             that.setData({
               underSwiperIndex: 0
             })
-          }, 2500)
+          }, 2250)
         }
       });
     })
