@@ -290,7 +290,6 @@ Page({
         dateCount: this.data.dateCount
       },
       success: res => {
-        console.log(res)
         if (res.result.pass == 0) {
           wx.showToast({
             title: '您已满添加的次数',
