@@ -12,7 +12,7 @@
       <view wx:if='{{item.last_sign_date == nowDay}}' class='sign-minus'><icon type="success_no_circle" size="20" color='#1EB5A1'/></view>
     </view>
     <view class='sign-remind {{length == dateCount? "tips": ""}}'>(至多添加{{dateCount}}条)</view>
-    <view class='sign-remind {{length == 0? "tips": ""}}'>(请添加一条习惯)</view>
+    <view class='sign-remind {{length == 0? "tips": ""}}'>(请添加一条习惯,至多可添加{{dateCount}}条)</view>
   </view>
 </view>
   

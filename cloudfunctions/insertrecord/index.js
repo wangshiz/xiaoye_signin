@@ -1,5 +1,5 @@
 // 云函数入口文件
-//const cloud = require('wx-server-sdk')
+const cloud = require('wx-server-sdk')
 
 cloud.init({ env: 'winder-b47b5d'})
 //cloud.init({ env: 'windertest-24bc91' })
@@ -28,27 +28,39 @@ exports.main = async (event, context) => {
   }
 
   try {
-    await db.collection('busi_sign_in_record').add({
-      data: {
-        signid: event.signid,
-        date: nowDate,
-        date_time_stamp: event.nowDate,
-        year: dateYear.toString(),
-        month: dateMonth >= 10? dateMonth.toString(): "0"+dateMonth.toString(),
-        day: dateDay >= 10 ? dateDay.toString() : "0" + dateDay.toString(),
-      }
-    })
+    const res = await db.collection('busi_sign_in').where({
+      signid: event.signid,
+      year: dateYear.toString(),
+      month: dateMonth >= 10 ? dateMonth.toString() : "0" + dateMonth.toString(),
+      day: dateDay >= 10 ? dateDay.toString() : "0" + dateDay.toString(),
+    }).get()
 
-    await db.collection('busi_sign_in').doc(event.signid).update({
-      data: {
-        last_sign_date: nowDate,
-        day_count: _.inc(1),
-        cont_count: shouldAdd ?_.inc(1): 1
-      }
-    })
+    var pass = false
+    if (res.data.length == 0) {
+      await db.collection('busi_sign_in_record').add({
+        data: {
+          signid: event.signid,
+          date: nowDate,
+          date_time_stamp: event.nowDate,
+          year: dateYear.toString(),
+          month: dateMonth >= 10? dateMonth.toString(): "0"+dateMonth.toString(),
+          day: dateDay >= 10 ? dateDay.toString() : "0" + dateDay.toString(),
+        }
+      })
 
+      await db.collection('busi_sign_in').doc(event.signid).update({
+        data: {
+          last_sign_date: nowDate,
+          day_count: _.inc(1),
+          cont_count: shouldAdd ?_.inc(1): 1
+        }
+      })
+      pass = true
+    } else {
+      pass = false
+    }
     return {
-      success
+      pass
     }
   } catch (e) {
     console.log(e)

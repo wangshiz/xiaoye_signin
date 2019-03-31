@@ -45,10 +45,6 @@ Page({
       sizeArr: sizeArr //尺寸数组
     })
     this.fetchById()
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     this.generateThreeMonths(year, month).then((data) => {
       let calendar = data
       this.setData({
@@ -140,9 +136,6 @@ Page({
           duration: 2000
         })
       },
-      complete: err => {
-        wx.hideLoading();
-      }
     })
   },
 
@@ -204,9 +197,6 @@ Page({
           duration: 2000
         })
       },
-      complete: err => {
-
-      }
     })
   },
 
@@ -226,10 +216,12 @@ Page({
         nowDate: nowDate
       },
       success: res => {
-        this.onLoad({id: this.data.id});
-        this.setData({
-          isFlash: true
-        })
+        if (res.result.pass) {
+          this.onLoad({ id: this.data.id });
+          this.setData({
+            isFlash: true
+          })
+        }
       },
       fail: err => {
         wx.showToast({
@@ -237,9 +229,6 @@ Page({
           icon: 'none',
           duration: 2000
         })
-      },
-      complete: err => {
-        wx.hideLoading()
       }
     })
   },

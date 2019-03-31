@@ -210,6 +210,7 @@ Page({
     wx.cloud.callFunction({
       name: 'fetch',
       success: res => {
+        wx.hideLoading()
         if (res.result.data != null) {
           var arr = res.result.data;
           for (var i = 0; i < arr.length; ++i) {
@@ -272,9 +273,6 @@ Page({
           duration: 2000
         })
       },
-      complete: err =>{
-        wx.hideLoading()
-      }
     })
   },
 
@@ -288,11 +286,26 @@ Page({
       name: 'insert',
       data: {
         name: name,
-        nowDate: nowDate
+        nowDate: nowDate,
+        dateCount: this.data.dateCount
       },
       success: res => {
-        console.log('[云函数] [login] user openid: ', res.result._id)
-        if (res.result._id != null && res.result._id != "") {
+        console.log(res)
+        if (res.result.pass == 0) {
+          wx.showToast({
+            title: '您已满添加的次数',
+            icon: 'none',
+            duration: 2000
+          })
+        }
+        if (res.result.pass == 1) {
+          wx.showToast({
+            title: '您已添加该类习惯',
+            icon: 'none',
+            duration: 2000
+          })
+        }
+        if (res.result.pass == 2) {
           this.getMySignData("add");
         }
       },
@@ -303,9 +316,6 @@ Page({
           duration: 2000
         })
       },
-      complete: err => {
-        wx.hideLoading()
-      }
     })
   }
 })
