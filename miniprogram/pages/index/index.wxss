@@ -182,7 +182,11 @@ page {
   text-align: center;
   font-size: 28rpx;
   color: #7A7A7A;
+  display: none;
+}
 
+.tips {
+  display: block;
 }
 
 .grid { display: -webkit-box; display: box; }  

@@ -16,7 +16,8 @@ Page({
     showFormStatus: false,
     signAddDisplay: false,
     openid: null,
-    isFlash: false
+    isFlash: false,
+    length: -1
   },
 
   //打开form表单
@@ -208,7 +209,6 @@ Page({
     })
     wx.cloud.callFunction({
       name: 'fetch',
-      data: {},
       success: res => {
         if (res.result.data != null) {
           var arr = res.result.data;
@@ -223,7 +223,8 @@ Page({
             }
           }
           that.setData({
-            signInData: arr
+            signInData: arr,
+            length: arr.length
           })
           
           if (scenes == "onLoad"){

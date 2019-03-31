@@ -11,11 +11,12 @@
       <view class="sign-cont-count">持续签到<text class="day-item">{{item.cont_count}}</text>天</view>
       <view wx:if='{{item.last_sign_date == nowDay}}' class='sign-minus'><icon type="success_no_circle" size="20" color='#1EB5A1'/></view>
     </view>
-    <view wx:if='{{signInData.length == dateCount}}' class='sign-remind'>(至多添加{{dateCount}}条)</view>
+    <view class='sign-remind {{length == dateCount? "tips": ""}}'>(至多添加{{dateCount}}条)</view>
+    <view class='sign-remind {{length == 0? "tips": ""}}'>(请添加一条习惯)</view>
   </view>
 </view>
   
-<view wx:if="{{signInData.length < dateCount && signAddDisplay}}" class="sign-add" animation="{{animationAddData}}">
+<view wx:if="{{length < dateCount && signAddDisplay}}" class="sign-add" animation="{{animationAddData}}">
   <button type="primary" bindtap='openForm' data-status='open'>添加一条习惯</button>
 </view>
 <!-- 蒙层 -->
