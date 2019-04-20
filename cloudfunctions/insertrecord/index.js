@@ -1,8 +1,8 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init({ env: 'winder-b47b5d'})
-//cloud.init({ env: 'windertest-24bc91' })
+//cloud.init({ env: 'winder-b47b5d'})
+cloud.init({ env: 'windertest-24bc91' })
 const db = cloud.database()
 const _ = db.command
 
@@ -11,10 +11,7 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   var nowDate = new Date(event.nowDate);
   var dateNum = nowDate.getTime()
-  var dateYear = nowDate.getFullYear();
-  var dateMonth = nowDate.getMonth() + 1;
-  var dateDay = nowDate.getDate();
-  var nowZeroDate = new Date(dateYear, dateMonth - 1, dateDay);
+  var nowZeroDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
   //是否需要添加
   var shouldAdd = true;
   if (event.lastSignDate == null) {
@@ -28,11 +25,11 @@ exports.main = async (event, context) => {
   }
 
   try {
-    const res = await db.collection('busi_sign_in').where({
+    const res = await db.collection('busi_sign_in_record').where({
       signid: event.signid,
-      year: dateYear.toString(),
-      month: dateMonth >= 10 ? dateMonth.toString() : "0" + dateMonth.toString(),
-      day: dateDay >= 10 ? dateDay.toString() : "0" + dateDay.toString(),
+      year: event.dateYear.toString(),
+      month: event.dateMonth >= 10 ? event.dateMonth.toString() : "0" + event.dateMonth.toString(),
+      day: event.dateDay >= 10 ? event.dateDay.toString() : "0" + event.dateDay.toString(),
     }).get()
 
     var pass = false
@@ -42,9 +39,9 @@ exports.main = async (event, context) => {
           signid: event.signid,
           date: nowDate,
           date_time_stamp: event.nowDate,
-          year: dateYear.toString(),
-          month: dateMonth >= 10? dateMonth.toString(): "0"+dateMonth.toString(),
-          day: dateDay >= 10 ? dateDay.toString() : "0" + dateDay.toString(),
+          year: event.dateYear.toString(),
+          month: event.dateMonth >= 10 ? event.dateMonth.toString() : "0" + event.dateMonth.toString(),
+          day: event.dateDay >= 10 ? event.dateDay.toString() : "0" + event.dateDay.toString(),
         }
       })
 

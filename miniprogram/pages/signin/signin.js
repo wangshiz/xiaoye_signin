@@ -207,13 +207,20 @@ Page({
     })
     var signid = this.data.id;
     var lastSignDate = this.data.lastSignDate == null ? null :  this.data.lastSignDate.getTime();
-    var nowDate = new Date().getTime();
+    var now = new Date();
+    var nowDate = now.getTime();
+    var dateYear = now.getFullYear();
+    var dateMonth = now.getMonth() + 1;
+    var dateDay = now.getDate();
     wx.cloud.callFunction({
       name: 'insertrecord',
       data: { 
         signid: signid,
         lastSignDate: lastSignDate,
-        nowDate: nowDate
+        nowDate: nowDate,
+        dateYear: dateYear,
+        dateMonth: dateMonth,
+        dateDay: dateDay
       },
       success: res => {
         if (res.result.pass) {
